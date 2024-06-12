@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "145038560111",
+    "project_id": "emailpasswordauth-17eb2",
+    "storage_bucket": "emailpasswordauth-17eb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145038560111:android:782aa8b717f92d41fa369a",
+        "android_client_info": {
+          "package_name": "com.example.akarna"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPSgms6wW8qIcZtD0Wrh-8dXZFv5IddnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
