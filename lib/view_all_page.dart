@@ -1,7 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:akarna/choose_country.dart';
 import 'package:akarna/constants.dart';
 import 'package:akarna/details_page.dart';
 import 'package:akarna/model/filter_notifier.dart';
@@ -10,7 +7,6 @@ import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -126,14 +122,15 @@ class _ViewallState extends State<Viewall> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 130,
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(14),
-                              child: Image.network(
-                                _products[index]["imageURL"],
-                                fit: BoxFit.fitWidth,
-                                height: 120,
-                                width: MediaQuery.of(context).size.width,
-                              )),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(25))
+                          ),
+                          child: Image.network(
+                            _products[index]["imageURL"],
+                            fit: BoxFit.fitWidth,
+                            height: 120,
+                            width: MediaQuery.of(context).size.width,
+                          ),
                         ),
                         Column(
                           children: [
@@ -182,8 +179,10 @@ class _ViewallState extends State<Viewall> {
                         border: Border.all(color: Colors.black, width: 1.0),
                         borderRadius: BorderRadius.circular(14)),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           height: 130,
                           child: ClipRRect(
@@ -195,44 +194,22 @@ class _ViewallState extends State<Viewall> {
                                 width: MediaQuery.of(context).size.width,
                               )),
                         ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 8.0),
-                                  child: Text("${_products[index]["price"]} Egp"),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Icon(Icons.bed_outlined),
-                                Text("${_products[index]["bed"]} "),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Icon(Icons.bathtub_outlined),
-                                Text("${_products[index]["bath"]}"),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(60, 0, 0, 15),
-                                  child: Icon(CupertinoIcons.heart),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 8.0),
-                                  child: Text("${_products[index]["space"]} m^2"),
-                                ),
-                              ],
-                            ),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${_products[index]["price"]} Egp"),
+                              Text("${_products[index]["space"]} m^2"),
+                            ],
+                          ),
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Icon(CupertinoIcons.location_solid),
+                            const Icon(CupertinoIcons.location_solid),
                             Text("${_products[index]["location"]} "),
+
                             Padding(
                               padding: const EdgeInsets.only(left: 90),
                               child: CupertinoTextButton(
@@ -251,6 +228,8 @@ class _ViewallState extends State<Viewall> {
                                 },
                               ),
                             ),
+
+                            SizedBox(width: MediaQuery.sizeOf(context).width * 0.05),
                           ],
                         ),
                       ],

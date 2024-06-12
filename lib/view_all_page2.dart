@@ -1,12 +1,7 @@
-import 'dart:io';
-
-import 'package:akarna/choose_country.dart';
-import 'package:akarna/details_page.dart';
 import 'package:akarna/details_page_rent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:searchfield/searchfield.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -108,7 +103,7 @@ class _Viewall2State extends State<Viewall2> {
                       width: MediaQuery.of(context).size.width,
                       height: 130,
                       child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
                           child: Image.network(
                             _products[index]["imageURL"],
                             fit: BoxFit.fitWidth,
@@ -118,37 +113,15 @@ class _Viewall2State extends State<Viewall2> {
                     ),
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child:
-                              Text("${_products[index]["price"]} Egp"),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Icon(Icons.bed_outlined),
-                            Text("${_products[index]["bed"]} "),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Icon(Icons.bathtub_outlined),
-                            Text("${_products[index]["bath"]}"),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(60, 0, 0, 15),
-                              child: Icon(CupertinoIcons.heart),
-                            ),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child:
+                          Text("${_products[index]["price"]} Egp"),
                         ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child:
-                              Text("${_products[index]["space"]} m^2"),
-                            ),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child:
+                          Text("${_products[index]["space"]} m^2"),
                         ),
                       ],
                     ),
