@@ -106,11 +106,41 @@ class _ViewallState extends State<Viewall> {
               ],
             ),
 
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+
+            Consumer<FilterNotifier>(
+              builder: (BuildContext context, FilterNotifier value, Widget? child) => SingleChildScrollView(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(_products.length, (index) => GestureDetector(
+                    onTap: () => setState(()
+                    {
+                      value.range = _products[index]['price'];
+                      value.chosenIndex = index;
+                    }),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      child: Container(
+                        height: 25.h,
+                        width: 75.w,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.green, width: 2.5),
+                          borderRadius: BorderRadius.circular(15),
+                            color: value.chosenIndex == index ? Colors.green : Colors.white,
+                        ),
+                        child: Center(child: Text(_products[index]['price'].toString(), style: TextStyle(color: value.chosenIndex == index ? Colors.white : Colors.black))),
+                      ),
+                    ),
+                  )),
+                ),
+              ),
+            ),
+
             const SizedBox(height: 20),
 
             Consumer<FilterNotifier>(
               builder: (BuildContext context, value, Widget? child) => Column(
-                children: List.generate(_products.length, (index) => value.chosen ? (value.location == _products[index]['location'] ? Padding(
+                children: List.generate(_products.length, (index) => value.chosen ? (value.location == _products[index]['location'] && value.range >= _products[index]['price'] ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   child: Container(
                     height: 220,
@@ -118,33 +148,33 @@ class _ViewallState extends State<Viewall> {
                         border: Border.all(color: Colors.black, width: 1.0),
                         borderRadius: BorderRadius.circular(14)),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 130,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(25))
-                          ),
-                          child: Image.network(
-                            _products[index]["imageURL"],
-                            fit: BoxFit.fitWidth,
-                            height: 120,
-                            width: MediaQuery.of(context).size.width,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                            child: Image.network(
+                              _products[index]["imageURL"],
+                              fit: BoxFit.fitWidth,
+                              height: 120,
+                              width: MediaQuery.of(context).size.width,
+                            ),
                           ),
                         ),
-                        Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text("${_products[index]["price"]} Egp"),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text("${_products[index]["space"]} m^2"),
-                            ),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("${_products[index]["price"]} Egp"),
+                              Text("${_products[index]["space"]} m^2"),
+                            ],
+                          ),
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Icon(CupertinoIcons.location_solid),
                             Text("${_products[index]["location"]} "),
@@ -166,6 +196,8 @@ class _ViewallState extends State<Viewall> {
                                 },
                               ),
                             ),
+
+                            SizedBox(width: MediaQuery.sizeOf(context).width * 0.05),
                           ],
                         ),
                       ],
@@ -174,7 +206,7 @@ class _ViewallState extends State<Viewall> {
                 ) : const SizedBox.shrink()) : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   child: Container(
-                    height: 220,
+                    height: 220.h,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black, width: 1.0),
                         borderRadius: BorderRadius.circular(14)),
@@ -186,7 +218,7 @@ class _ViewallState extends State<Viewall> {
                           width: MediaQuery.of(context).size.width,
                           height: 130,
                           child: ClipRRect(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
                               child: Image.network(
                                 _products[index]["imageURL"],
                                 fit: BoxFit.fitWidth,
@@ -194,6 +226,9 @@ class _ViewallState extends State<Viewall> {
                                 width: MediaQuery.of(context).size.width,
                               )),
                         ),
+
+                        SizedBox(height: MediaQuery.sizeOf(context).height * 0.001),
+
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                           child: Column(
@@ -204,6 +239,7 @@ class _ViewallState extends State<Viewall> {
                             ],
                           ),
                         ),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
@@ -232,6 +268,8 @@ class _ViewallState extends State<Viewall> {
                             SizedBox(width: MediaQuery.sizeOf(context).width * 0.05),
                           ],
                         ),
+
+                        SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                       ],
                     ),
                   ),
