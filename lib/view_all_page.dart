@@ -5,6 +5,7 @@ import 'package:akarna/model/filter_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,8 @@ import 'package:flutter/widgets.dart';
 import 'filter_widget.dart';
 
 class Viewall extends StatefulWidget {
-  const Viewall({super.key});
+  const Viewall({super.key, required this.email});
+  final String email;
 
   @override
   State<Viewall> createState() => _ViewallState();
@@ -40,6 +42,7 @@ class _ViewallState extends State<Viewall> {
           "bed": qn.docs[i]["bed"],
           "description": qn.docs[i]["description"],
           "location": qn.docs[i]["location"],
+          "token": qn.docs[i]["token"],
         });
       }
     });
@@ -110,6 +113,7 @@ class _ViewallState extends State<Viewall> {
 
             Consumer<FilterNotifier>(
               builder: (BuildContext context, FilterNotifier value, Widget? child) => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_products.length, (index) => GestureDetector(
@@ -122,7 +126,7 @@ class _ViewallState extends State<Viewall> {
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: Container(
                         height: 25.h,
-                        width: 75.w,
+                        width: 100.w,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.green, width: 2.5),
                           borderRadius: BorderRadius.circular(15),
@@ -192,7 +196,7 @@ class _ViewallState extends State<Viewall> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              detailspage(_products[index])));
+                                              DetailsPage(products: _products, index: index, email: widget.email)));
                                 },
                               ),
                             ),
@@ -249,18 +253,27 @@ class _ViewallState extends State<Viewall> {
                             Padding(
                               padding: const EdgeInsets.only(left: 90),
                               child: CupertinoTextButton(
-                                text: "View details",
+                                text: _products[index]['token'] == 0 ? 'Sold' : "View details",
                                 textAlign: TextAlign.end,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                 ),
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              detailspage(_products[index])));
+                                  if(_products[index]['token'] != 0)
+                                    {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DetailsPage(products: _products, index: index, email: widget.email)));
+                                    }
+
+                                  else
+                                  {
+                                    Fluttertoast.showToast(msg: 'All tokens are sold');
+
+                                  }
                                 },
                               ),
                             ),

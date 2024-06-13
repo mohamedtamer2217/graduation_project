@@ -1,211 +1,266 @@
-import 'package:akarna/choose_country.dart';
-import 'package:cupertino_text_button/cupertino_text_button.dart';
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:searchfield/searchfield.dart';
-
+import 'package:akarna/model/token_notifier.dart';
+import 'package:akarna/stream_token.dart';
+import 'package:akarna/update_tokens.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
-
-class detailspage extends StatefulWidget {
-      var _product;
-      detailspage(this._product);
-
-
+class DetailsPage extends StatefulWidget
+{
+  const DetailsPage({super.key, required this.products, required this.index, required this.email,});
+  final List<dynamic> products;
+  final String email;
+  final int index;
 
   @override
-  State<detailspage> createState() => _detailspageState();
+  State<DetailsPage> createState() => _DetailsPageState();
 }
 
-class _detailspageState extends State<detailspage> {
+class _DetailsPageState extends State<DetailsPage>
+{
   List<String> images= [
     "assets/img/1.png",
     "assets/img/2.png",
-
   ];
-int num =0;
-  int _value = 5;
+  int num =0;
+  int _value = 1;
   double min = 1.0;
-  double max = 20.0;
+  double max = 1.0;
+  Stream<int>? _tokenStream;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   void _token() {
     setState(() {
       num = num++;
     });
   }
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body:
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
-              Padding(
-                padding: const EdgeInsets.only(right: 330),
-                child: IconButton(  onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back),color: Colors.black,),
-              ),
+  void initState()
+  {
+    super.initState();
+    _tokenStream = _firestore.collection('products').doc(docId).snapshots().map((snapshot) => snapshot.data()?['token'] as int);
+    _value = widget.products[widget.index]['token'];
+    max = double.parse(widget.products[widget.index]['token'].toString());
+  }
+
+  @override
+  Widget build(BuildContext context)
+  {
+    return ChangeNotifierProvider(
+      create: (context) => TokenNotifier(),
+      child: Consumer<TokenNotifier>(
+        builder: (BuildContext context, TokenNotifier value, Widget? child) => Scaffold(
+          body:
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
+                Padding(
+                  padding: const EdgeInsets.only(right: 330),
+                  child: IconButton(  onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back),color: Colors.black,),
+                ),
 
                 Image.network(
-                      widget._product["imageURL"],fit: BoxFit.contain,
-                      height: 280,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-
-
-
-
-
-              SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Row(
-                  children: [
-
-                    Icon(CupertinoIcons.star_fill,color: Colors.green,),
-                    Icon(CupertinoIcons.star_fill,color: Colors.green,),
-                    Icon(CupertinoIcons.star_fill,color: Colors.green,),
-                    Icon(CupertinoIcons.star_fill,color: Colors.green,),
-                    Icon(CupertinoIcons.star_lefthalf_fill,color: Colors.green,),
-                    SizedBox(width: MediaQuery.sizeOf(context).width*0.3,),
-                    Text(widget._product['price'].toString(),style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                  ],
-
-                ),
-              ),
-              SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Text(widget._product['Name'],style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
-                      ],
-                    ),
-                    SizedBox(width: MediaQuery.sizeOf(context).width*0.25,),
-                    const Icon(CupertinoIcons.location_solid,color: Colors.green,),
-                     Column(
-                      children: [
-                        Text( widget._product['location']),
-                      ],
-                    )
-                  ],
-
-
+                  widget.products[widget.index]["imageURL"],fit: BoxFit.contain,
+                  height: 280,
+                  width: MediaQuery.of(context).size.width,
                 ),
 
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30,left: 30),
-                    child: Text("Tokens",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+                SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Row(
+                    children: [
+
+                      Icon(CupertinoIcons.star_fill,color: Colors.green,),
+                      Icon(CupertinoIcons.star_fill,color: Colors.green,),
+                      Icon(CupertinoIcons.star_fill,color: Colors.green,),
+                      Icon(CupertinoIcons.star_fill,color: Colors.green,),
+                      Icon(CupertinoIcons.star_lefthalf_fill,color: Colors.green,),
+                      SizedBox(width: MediaQuery.sizeOf(context).width*0.3,),
+                      Text(value.price > 0 ? value.price.toInt().toString() : widget.products[widget.index]['price'].toString(),style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                    ],
+
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0,left: 20),
-                child: Row(
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text(widget.products[widget.index]['Name'],style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                        ],
+                      ),
+                      SizedBox(width: MediaQuery.sizeOf(context).width*0.25,),
+                      const Icon(CupertinoIcons.location_solid,color: Colors.green,),
+                      Column(
+                        children: [
+                          Text( widget.products[widget.index]['location']),
+                        ],
+                      )
+                    ],
+
+
+                  ),
+
+                ),
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+
+                Row(
                   children: [
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.05),
+
+                    const Text("Tokens:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24),),
+
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
+
+                    StreamBuilder<int>(
+                        stream: _tokenStream,
+                        builder: (context, snapshot) => Text('${snapshot.data.toString()} available',style: TextStyle(color: Colors.green,fontSize: 25,fontWeight: FontWeight.bold),)
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0,left: 20),
+                  child: Row(
+                    children: [
 
 
-                    Container(
+                      Container(
                         height: 40,
                         width:  40,
                         decoration: BoxDecoration(
                             color: Colors.green ,
                             borderRadius: BorderRadius.circular(50)
                         ),
-                      child: IconButton(
-                          color: Colors.white,
-                          onPressed:(){
-                        setState((){
-                          if(_value < max){
-                            /// Add as many as you want
-                            _value++;
-                          }
-                        });
-                      }, icon: const Icon(Icons.add)),
-                    ),
-                    SizedBox(width: 5,),
-                    Text(_value.toString(),style: TextStyle(color: Colors.green,fontSize: 25,fontWeight: FontWeight.bold),),
-                    SizedBox(width: 5,),
-                    Container(
-                      height: 40,
-                      width:  40,
-                      decoration: BoxDecoration(
-                        color: Colors.green ,
-                        borderRadius: BorderRadius.circular(50)
+                        child: IconButton(
+                            color: Colors.white,
+                            onPressed:(){
+                              setState((){
+                                if(_value < max){
+                                  /// Add as many as you want
+                                  _value++;
+                                  value.changePriceByToken(tokens: _value, currentPrice: widget.products[widget.index]['price']);
+
+                                }
+                              });
+                            }, icon: const Icon(Icons.add)),
                       ),
-                      child: IconButton(
-                          color: Colors.white,
-                          onPressed:(){
-                        setState((){
-                          if(_value > min){
-                            /// Subtract as many as you want
-                            _value--;
-                          }
+                      SizedBox(width: 5,),
+                      Text(_value.toString(),style: TextStyle(color: Colors.green,fontSize: 25,fontWeight: FontWeight.bold),),
+                      SizedBox(width: 5,),
+                      Container(
+                        height: 40,
+                        width:  40,
+                        decoration: BoxDecoration(
+                            color: Colors.green ,
+                            borderRadius: BorderRadius.circular(50)
+                        ),
+                        child: IconButton(
+                            color: Colors.white,
+                            onPressed:(){
+                              setState((){
+                                if(_value > min){
+                                  /// Subtract as many as you want
+                                  _value--;
+                                  value.changePriceByToken(tokens: _value, currentPrice: widget.products[widget.index]['price']);
 
-                        });
-                      }, icon: const Icon(Icons.remove)),
-                    ),
+                                }
+
+                              });
+                            }, icon: const Icon(Icons.remove)),
+                      ),
 
 
-                Slider(
+                      Slider(
+                        value: _value.toDouble(),
+                        min: min,
+                        max: max,
+                        activeColor: Colors.green,
+                        inactiveColor: Colors.orange,
+                        label: 'Set volume value',
+                        onChanged: (double newValue) {
+                          setState(() {
+                            _value = newValue.round();
+                            value.changePriceByToken(tokens: _value, currentPrice: widget.products[widget.index]['price']);
+                          });
+                        },
 
-                  value: _value.toDouble(),
-                  min: min,
-                  max: max,
-                  activeColor: Colors.green,
-                  inactiveColor: Colors.orange,
-                  label: 'Set volume value',
-                  onChanged: (double newValue) {
-                    setState(() {
-                      _value = newValue.round();
-                    });
-                  },
+                      ),
 
+                    ],
+
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Padding(
+
+                  padding: const EdgeInsets.only(top: 10.0,left: 22),
+                  child: Row(
+                    children: [
+                      Text("Description" ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5,),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0,left: 22),
+                  child: Row(
+                    children: [
+                      Text( widget.products[widget.index]['description'])
+                    ],
+                  ),
                 ),
 
-                ],
+                const SizedBox(height:30),
 
+                StreamBuilder<int>(
+                  stream: _tokenStream,
+                  builder: (context, snapshot)
+                  {
+                    return FloatingActionButton.extended(
+                      backgroundColor: Colors.green,
+                      label: const Text("Invest",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+                      onPressed: () async
+                      {
+                        if(snapshot.data! > 0 && snapshot.data! >= _value)
+                        {
+                          await updateTokens(imageUrl: widget.products[widget.index]['imageURL'], chosenTokens: value.chosenTokens, products: widget.products, index: widget.index);
+                          FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+                          await firebaseFirestore.collection('investments').add({
+                            'email': widget.email,
+                            'tokens': value.chosenTokens,
+                            'imageUrl': widget.products[widget.index]['imageURL'],
+                            'price': value.price,
+                            'location': widget.products[widget.index]['location'],
+                          });
+                          setState(() {});
+                        }
+
+                        else
+                        {
+                          Fluttertoast.showToast(msg: 'Tokens are unavailable');
+                        }
+                      },
+
+                    );
+                  }
                 ),
-              ),
-              SizedBox(height: 10,),
-              Padding(
 
-                padding: const EdgeInsets.only(top: 10.0,left: 22),
-                child: Row(
-                  children: [
-                    Text("Description" ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
-                  ],
-                ),
-              ),
-              SizedBox(height: 5,),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0,left: 22),
-                child: Row(
-                  children: [
-                    Text( widget._product['description'])
-                  ],
-                ),
-              ),
-              SizedBox(height:30,),
-              FloatingActionButton.extended(
-                backgroundColor: Colors.green,
-                  label: Text("Invest",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
-                  onPressed: () {
-                    setState(() {
-                    });
-                  },
+              ],
+            ),
 
-              ),
-
-            ],
           ),
-
         ),
+      ),
     );
   }
 }

@@ -20,7 +20,7 @@ Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp( MyApp());
+  runApp( const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -50,8 +50,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
+  const MyHomePage({super.key, required this.title, required this.email});
+  final String email;
   final String title;
 
   @override
@@ -76,17 +76,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
      List<Widget> _widgetOptions = <Widget>[
-       Homepage(),
+       Homepage(email: widget.email),
 
-     Portofolio(),
+     const Portofolio(),
 
-     Wallet(),
-       account_page(),
+     const Wallet(),
+       const account_page(),
     ];
 
     return Scaffold(
-
-
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
