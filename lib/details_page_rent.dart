@@ -175,12 +175,12 @@ class _DetailsPageRentState extends State<DetailsPageRent>
             SizedBox(height:30,),
             FloatingActionButton.extended(
               backgroundColor: Colors.green,
-              label: Text(rents.isEmpty ? 'Rent' : (rents[widget.index]['imageUrl'] == widget.product[widget.index]['imageURL'] && rents[widget.index]['email'] == widget.email ? 'Rented' : 'Rent') ,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+              label: Text(rents.isEmpty ? 'Rent' : (rents.any((map) => map['imageUrl'] == widget.product[widget.index]['imageURL']) ? 'Rented' : 'Rent'),style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
               onPressed: () async
               {
                 if(rents.isNotEmpty)
                 {
-                  if((rents[widget.index]['imageUrl'] == widget.product[widget.index]['imageURL']  && rents[widget.index]['email'] == widget.email) == false)
+                  if((rents.any((map) => map['imageUrl'] == widget.product[widget.index]['imageURL'])  && rents[widget.index]['email'] == widget.email) == false)
                   {
                     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
                     await firebaseFirestore.collection('rents').add({
@@ -198,7 +198,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
 
                     DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
                     String docId = documentSnapshot.id;
-                    double currentBalance = documentSnapshot['balance'];
+                    int currentBalance = documentSnapshot['balance'];
 
                     await FirebaseFirestore.instance
                         .collection('users')
@@ -206,7 +206,6 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                         .update({'balance': currentBalance - widget.product[widget.index]['price']});
 
                     Fluttertoast.showToast(msg: 'Successful Rent');
-
                     setState(() {});
                   }
                 }
@@ -230,7 +229,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
 
                   DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
                   String docId = documentSnapshot.id;
-                  double currentBalance = documentSnapshot['balance'];
+                  int currentBalance = documentSnapshot['balance'];
 
                   await FirebaseFirestore.instance
                       .collection('users')

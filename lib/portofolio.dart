@@ -13,7 +13,7 @@ class Portofolio extends StatefulWidget
 }
 class _Portofolio extends State<Portofolio>
 {
-  List<dynamic> investments = [];
+  List<dynamic> investments = [], rents = [];
 
   List<String> images= [
     "assets/img/1.png",
@@ -41,11 +41,32 @@ class _Portofolio extends State<Portofolio>
     return qn.docs;
   }
 
+  fetchRents() async
+  {
+    QuerySnapshot qn = await _firestore.collection('rents').get();
+    setState(()
+    {
+      for (int i = 0; i < qn.docs.length; i++)
+      {
+        rents.add({
+          "email": qn.docs[i]["email"],
+          "imageUrl": qn.docs[i]["imageUrl"],
+          "location": qn.docs[i]["location"],
+          "price": qn.docs[i]["price"],
+          "isRented": qn.docs[i]["isRented"],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
+
   @override
   void initState()
   {
     super.initState();
     fetchProducts();
+    fetchRents();
   }
 
   @override
@@ -155,8 +176,10 @@ class _Portofolio extends State<Portofolio>
                 height:200,
                 width:double.infinity,
                 child: ListView.builder(
+                  itemCount: rents.length,
+                  scrollDirection: Axis.horizontal,
                   itemBuilder: (context,index){
-                    return Padding(
+                    return widget.email == rents[index]['email'] ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal:25),
                       child: Container(
                         decoration: BoxDecoration(
@@ -168,17 +191,17 @@ class _Portofolio extends State<Portofolio>
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            Image(image: AssetImage(images[index])),
-                            Text("egp 20000"),
-                            Text("400m^2")
-
+                            Image.network(
+                              rents[index]['imageUrl'],
+                              height: 100.h,
+                            ),
+                            Text('${rents[index]['price']} EGP'),
+                            Text('Location: ${rents[index]['location']}'),
                           ],
                         ),
                       ),
-                    );
+                    ) : const SizedBox.shrink();
                   },
-                  itemCount: 2,
-                  scrollDirection: Axis.horizontal,
                 ),
               )
 
