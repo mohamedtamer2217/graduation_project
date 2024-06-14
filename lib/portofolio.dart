@@ -1,26 +1,56 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
-class Portofolio extends StatefulWidget {
-  const Portofolio({super.key});
+class Portofolio extends StatefulWidget
+{
+  const Portofolio({super.key, required this.email});
+  final String email;
 
   @override
   State<Portofolio> createState() => _Portofolio();
 }
-class _Portofolio extends State<Portofolio> {
+class _Portofolio extends State<Portofolio>
+{
+  List<dynamic> investments = [];
+
   List<String> images= [
     "assets/img/1.png",
     "assets/img/2.png",
-
   ];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  fetchProducts() async
+  {
+    QuerySnapshot qn = await _firestore.collection('investments').get();
+    setState(()
+    {
+      for (int i = 0; i < qn.docs.length; i++)
+      {
+        investments.add({
+          "email": qn.docs[i]["email"],
+          "imageUrl": qn.docs[i]["imageUrl"],
+          "location": qn.docs[i]["location"],
+          "price": qn.docs[i]["price"],
+          "tokens": qn.docs[i]["tokens"],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
 
   @override
-  Widget build(BuildContext context) {
+  void initState()
+  {
+    super.initState();
+    fetchProducts();
+  }
 
-
-
+  @override
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -66,12 +96,7 @@ class _Portofolio extends State<Portofolio> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding:  EdgeInsets.only(right: MediaQuery.sizeOf(context).width*0.40),
-
-                child: Text("My Performance",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
-              ),
-
+              const Text("My Performance",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
 
               SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
 
@@ -86,8 +111,10 @@ class _Portofolio extends State<Portofolio> {
                 height:200,
                 width:double.infinity,
                 child: ListView.builder(
+                  itemCount: investments.length,
+                  scrollDirection: Axis.horizontal,
                   itemBuilder: (context,index){
-                    return Padding(
+                    return widget.email == investments[index]['email'] ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal:25),
                       child: Container(
                         decoration: BoxDecoration(
@@ -99,17 +126,18 @@ class _Portofolio extends State<Portofolio> {
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            Image(image: AssetImage(images[index])),
-                            Text("egp 20000"),
-                            Text("400m^2")
-
+                            Image.network(
+                              investments[index]['imageUrl'],
+                              height: 100.h,
+                            ),
+                            Text('${investments[index]['price']} EGP'),
+                            Text('Location: ${investments[index]['location']}'),
+                            Text('Tokens: ${investments[index]['tokens'].toString()}')
                           ],
                         ),
                       ),
-                    );
+                    ) : const SizedBox.shrink();
                   },
-                  itemCount: 2,
-                  scrollDirection: Axis.horizontal,
                 ),
               ),
 

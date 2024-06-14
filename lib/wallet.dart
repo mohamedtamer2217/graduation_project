@@ -1,22 +1,66 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-
 import 'model/user_model.dart';
 
 
-class Wallet extends StatefulWidget {
-  const Wallet({super.key});
+class Wallet extends StatefulWidget
+{
+  const Wallet({super.key, required this.email});
+  final String email;
 
   @override
   State<Wallet> createState() => _Wallet();
 }
-class _Wallet extends State<Wallet> {
+class _Wallet extends State<Wallet>
+{
+  List<dynamic> profiles = [], activities = [];
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  fetchProducts() async
+  {
+    QuerySnapshot qn = await _firestore.collection('users').get();
+    setState(()
+    {
+      for (int i = 0; i < qn.docs.length; i++)
+      {
+        profiles.add({
+          "balance": qn.docs[i]["balance"],
+          "email": qn.docs[i]["email"],
+          "firstName": qn.docs[i]["firstName"],
+          "imageURL": qn.docs[i]["imageURL"],
+          "secondName": qn.docs[i]["secondName"],
+          "uid": qn.docs[i]['uid'],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
+
+  fetchActivities() async
+  {
+    QuerySnapshot qn = await _firestore.collection('investments').get();
+    setState(()
+    {
+      for (int i = 0; i < qn.docs.length; i++)
+      {
+        activities.add({
+          'email': qn.docs[i]['email'],
+          'tokens': qn.docs[i]['tokens'],
+          'imageUrl': qn.docs[i]['imageUrl'],
+          'price': qn.docs[i]['price'],
+          'location': qn.docs[i]['location'],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
 
   @override
   void initState() {
@@ -29,13 +73,13 @@ class _Wallet extends State<Wallet> {
       this.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
+    fetchProducts();
+    fetchActivities();
   }
 
   @override
-  Widget build(BuildContext context) {
-
-
-
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -76,9 +120,9 @@ class _Wallet extends State<Wallet> {
 
                       ),
 
-                        child: const Column(
+                        child: Column(
                           children: [
-                            Row(
+                            const Row(
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(right: 150,top: 10,left: 35),
@@ -93,7 +137,7 @@ class _Wallet extends State<Wallet> {
                               ],
                             ),
                             SizedBox(height:20,),
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(right: 230),
                               child:  Text(
                                 'Balance',
@@ -105,7 +149,7 @@ class _Wallet extends State<Wallet> {
                             Padding(
                               padding: EdgeInsets.only(right: 190),
                               child:  Text(
-                                '\$36,000,000',
+                                '${widget.email == profiles[index]['email'] ? profiles[index]['balance'] : 0}',
                                 textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
                               ),
@@ -137,20 +181,21 @@ class _Wallet extends State<Wallet> {
               height:80,
               width:370,
               child: ListView.builder(
-                itemBuilder: (context,index){
-                  return Padding(
+                itemBuilder: (context,index)
+                {
+                  return activities.isNotEmpty ? (activities[index]['email'] == widget.email ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal:0),
                     child: Container(
                       width: 380,
                       decoration:  const BoxDecoration(
 
-                         color: Colors.grey
+                          color: Colors.grey
 
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
 
-                          Column(
+                          const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
 
                             children: [
@@ -165,13 +210,13 @@ class _Wallet extends State<Wallet> {
 
                           Column(
                             children: [
-                              Text("Sheikh Zayed Town House Token",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
-                              SizedBox(height:20, width:10,),
+                              Text(activities[index]['location'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                              const SizedBox(height:20, width:10,),
                               Row(
                                 children: [
-                                  Text("-\$200,000",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                                  Text("-\$${activities[index]['price']}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
                                   SizedBox(height:0, width:50,),
-                                  Text("2 Tokens",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                                  Text("${activities[index]['tokens']} Tokens",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
                                 ],
                               ),
 
@@ -180,7 +225,7 @@ class _Wallet extends State<Wallet> {
                         ],
                       ),
                     ),
-                  );
+                  ) : const SizedBox.shrink()) : const SizedBox.shrink();
                 },
                 itemCount: 1,
                 scrollDirection: Axis.horizontal,

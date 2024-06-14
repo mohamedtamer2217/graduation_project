@@ -2,8 +2,6 @@ import 'package:akarna/model/token_notifier.dart';
 import 'package:akarna/stream_token.dart';
 import 'package:akarna/update_tokens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,12 +30,6 @@ class _DetailsPageState extends State<DetailsPage>
   double max = 1.0;
   Stream<int>? _tokenStream;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  void _token() {
-    setState(() {
-      num = num++;
-    });
-  }
 
   @override
   void initState()
@@ -242,7 +234,25 @@ class _DetailsPageState extends State<DetailsPage>
                             'price': value.price,
                             'location': widget.products[widget.index]['location'],
                           });
+
+                        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                            .collection('users') // Replace with your collection name
+                            .where('email', isEqualTo: widget.email)
+                            .get();
+
+                        DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+                        String docId = documentSnapshot.id;
+
+                        int currentBalance = documentSnapshot['balance'];
+
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(docId)
+                            .update({'balance': currentBalance - value.price});
                           setState(() {});
+
+                          Fluttertoast.showToast(msg: 'Successful Payment');
+
                         }
 
                         else

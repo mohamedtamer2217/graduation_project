@@ -1,20 +1,11 @@
-
-import 'package:akarna/LoginScreen.dart';
-import 'package:akarna/details_page.dart';
 import 'package:akarna/home.dart';
 import 'package:akarna/portofolio.dart';
 import 'package:akarna/splash_screen.dart';
-import 'package:akarna/view_all_page.dart';
 import 'package:akarna/wallet.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:akarna/account.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-
 
 Future <void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,13 +51,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  List<String> images= [
-    "assets/img/1.png",
-    "assets/img/2.png",
-
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -77,10 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
      List<Widget> _widgetOptions = <Widget>[
        Homepage(email: widget.email),
-
-     const Portofolio(),
-
-     const Wallet(),
+       Portofolio(email: widget.email),
+       Wallet(email: widget.email),
        const account_page(),
     ];
 

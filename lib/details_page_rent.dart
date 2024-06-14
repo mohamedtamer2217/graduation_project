@@ -1,28 +1,55 @@
-import 'package:akarna/choose_country.dart';
-import 'package:cupertino_text_button/cupertino_text_button.dart';
-import 'package:dropdown_search/dropdown_search.dart';
-import 'package:searchfield/searchfield.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-
-class detailspagerent extends StatefulWidget {
-  var _product;
-  detailspagerent(this._product);
-
-
+class DetailsPageRent extends StatefulWidget
+{
+  const DetailsPageRent({super.key, required this.email, required this.product, required this.index});
+  final List<dynamic> product;
+  final String email;
+  final int index;
 
   @override
-  State<detailspagerent> createState() => _detailspagerentState();
+  State<DetailsPageRent> createState() => _DetailsPageRentState();
 }
 
-class _detailspagerentState extends State<detailspagerent> {
+class _DetailsPageRentState extends State<DetailsPageRent>
+{
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final List<dynamic> rents = [];
+  bool isRented = true;
 
+  fetchRents() async
+  {
+    QuerySnapshot qn = await _firestore.collection('rents').get();
+    setState(()
+    {
+      for (int i = 0; i < qn.docs.length; i++)
+      {
+        rents.add({
+          'email': qn.docs[i]['email'],
+          'imageUrl': qn.docs[i]['imageUrl'],
+          'price': qn.docs[i]['price'],
+          'location': qn.docs[i]['location'],
+          'isRented': qn.docs[i]['isRented'],
+        });
+      }
+    });
+
+    return qn.docs;
+  }
 
   @override
-  Widget build(BuildContext context) {
+  void initState()
+  {
+    super.initState();
+    fetchRents();
+  }
+
+  @override
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       body:
       SingleChildScrollView(
@@ -35,7 +62,7 @@ class _detailspagerentState extends State<detailspagerent> {
             ),
 
             Image.network(
-              widget._product["imageURL"],fit: BoxFit.contain,
+              widget.product[widget.index]["imageURL"],fit: BoxFit.contain,
               height: 280,
               width: MediaQuery.of(context).size.width,
             ),
@@ -56,7 +83,7 @@ class _detailspagerentState extends State<detailspagerent> {
                   Icon(CupertinoIcons.star_fill,color: Colors.green,),
                   Icon(CupertinoIcons.star_lefthalf_fill,color: Colors.green,),
                   SizedBox(width: MediaQuery.sizeOf(context).width*0.15,),
-                  Text(widget._product['price'].toString()+" Egp",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  Text("${widget.product[widget.index]['price']} Egp",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 ],
 
               ),
@@ -68,14 +95,14 @@ class _detailspagerentState extends State<detailspagerent> {
                 children: [
                   Column(
                     children: [
-                      Text(widget._product['Name'],style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
+                      Text(widget.product[widget.index]['Name'],style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                     ],
                   ),
                   SizedBox(width: MediaQuery.sizeOf(context).width*0.25,),
                   const Icon(CupertinoIcons.location_solid,color: Colors.green,),
                   Column(
                     children: [
-                      Text( widget._product['location']),
+                      Text( widget.product[widget.index]['location']),
                     ],
                   )
                 ],
@@ -103,22 +130,22 @@ class _detailspagerentState extends State<detailspagerent> {
                     SizedBox(height: MediaQuery.sizeOf(context).height*0.01,),
                     Row(
                       children: [
-                        Text("Space(m^2) :"+ widget._product["space"].toString(),style: TextStyle(color: Colors.white),)
+                        Text("Space(m^2) :"+ widget.product[widget.index]["space"].toString(),style: TextStyle(color: Colors.white),)
                       ],
                     ),
                     Row(
                       children: [
-                        Text("Bedrooms :"+ widget._product["bed"].toString(),style: TextStyle(color: Colors.white),)
+                        Text("Bedrooms :"+ widget.product[widget.index]["bed"].toString(),style: TextStyle(color: Colors.white),)
                       ],
                     ),
                     Row(
                       children: [
-                        Text("Bathrooms :"+ widget._product["bath"].toString(),style: TextStyle(color: Colors.white),)
+                        Text("Bathrooms :"+ widget.product[widget.index]["bath"].toString(),style: TextStyle(color: Colors.white),)
                       ],
                     ),
                     Row(
                       children: [
-                        Text("Price :"+ widget._product["price"].toString()+" Egp",style: TextStyle(color: Colors.white),)
+                        Text("Price :"+ widget.product[widget.index]["price"].toString()+" Egp",style: TextStyle(color: Colors.white),)
                       ],
                     )
                   ],
@@ -141,21 +168,80 @@ class _detailspagerentState extends State<detailspagerent> {
               padding: const EdgeInsets.only(top: 10.0,left: 22),
               child: Row(
                 children: [
-                  Text( widget._product['description'])
+                  Text( widget.product[widget.index]['description'])
                 ],
               ),
             ),
             SizedBox(height:30,),
             FloatingActionButton.extended(
               backgroundColor: Colors.green,
-              label: Text("Rent",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
-              onPressed: () {
-                setState(() {
-                });
+              label: Text(rents.isEmpty ? 'Rent' : (rents[widget.index]['imageUrl'] == widget.product[widget.index]['imageURL'] && rents[widget.index]['email'] == widget.email ? 'Rented' : 'Rent') ,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+              onPressed: () async
+              {
+                if(rents.isNotEmpty)
+                {
+                  if((rents[widget.index]['imageUrl'] == widget.product[widget.index]['imageURL']  && rents[widget.index]['email'] == widget.email) == false)
+                  {
+                    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+                    await firebaseFirestore.collection('rents').add({
+                      'email': widget.email,
+                      'imageUrl': widget.product[widget.index]['imageURL'],
+                      'price': widget.product[widget.index]['price'],
+                      'location': widget.product[widget.index]['location'],
+                      'isRented': true,
+                    });
+
+                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                        .collection('users') // Replace with your collection name
+                        .where('email', isEqualTo: widget.email)
+                        .get();
+
+                    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+                    String docId = documentSnapshot.id;
+                    double currentBalance = documentSnapshot['balance'];
+
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(docId)
+                        .update({'balance': currentBalance - widget.product[widget.index]['price']});
+
+                    Fluttertoast.showToast(msg: 'Successful Rent');
+
+                    setState(() {});
+                  }
+                }
+
+
+                else
+                {
+                  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+                  await firebaseFirestore.collection('rents').add({
+                    'email': widget.email,
+                    'imageUrl': widget.product[widget.index]['imageURL'],
+                    'price': widget.product[widget.index]['price'],
+                    'location': widget.product[widget.index]['location'],
+                    'isRented': true,
+                  });
+
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                      .collection('users') // Replace with your collection name
+                      .where('email', isEqualTo: widget.email)
+                      .get();
+
+                  DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+                  String docId = documentSnapshot.id;
+                  double currentBalance = documentSnapshot['balance'];
+
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(docId)
+                      .update({'balance': currentBalance - widget.product[widget.index]['price']});
+
+                  Fluttertoast.showToast(msg: 'Successful Rent');
+                  setState(() {});
+                }
               },
-
             ),
-
           ],
         ),
 

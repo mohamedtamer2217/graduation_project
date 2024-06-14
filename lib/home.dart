@@ -263,8 +263,9 @@ body:SingleChildScrollView(
                     CupertinoTextButton(
                       text: 'details',
                       style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 20,),
-                      onTap: () {
-                        Navigator.push(context,MaterialPageRoute(builder: (context)=>detailspagerent(_products_rent[index])));
+                      onTap: ()
+                      {
+                        Navigator.push(context,MaterialPageRoute(builder: (context)=> DetailsPageRent(email: widget.email, product: _products_rent, index: index)));
 
 
                         // Do your text stuff here.
