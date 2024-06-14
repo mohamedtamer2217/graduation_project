@@ -170,7 +170,7 @@ class _Wallet extends State<Wallet>
                           Padding(
                             padding: EdgeInsets.only(right: 190),
                             child:  Text(
-                              '${widget.email == profiles[index]['email'] ? profiles[index]['balance'] : 0}',
+                              '${widget.email == profiles[index]['email'] ? profiles[index]['balance'] :0}',
                               textAlign: TextAlign.start,
                               style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
                             ),
@@ -249,7 +249,7 @@ class _Wallet extends State<Wallet>
             ),
           ),
 
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
+
 
           const Text("Rents Activities",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
 

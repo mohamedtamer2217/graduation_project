@@ -1,4 +1,5 @@
 import 'package:akarna/constants.dart';
+import 'package:akarna/details_page_rent.dart';
 import 'package:akarna/model/filter_notifier.dart';
 import 'package:akarna/price_filter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -249,7 +250,7 @@ class _Viewall2State extends State<Viewall2>
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetailsPage(products: _products, index: index, email: widget.email)));
+                                              DetailsPageRent(product: _products, index: index, email: widget.email)));
                                 },
                               ),
                             ),
@@ -263,7 +264,7 @@ class _Viewall2State extends State<Viewall2>
                 ) : const SizedBox.shrink()) : Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
                   child: Container(
-                    height: 220.h,
+                    height: 225.h,
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.black, width: 1.0),
                         borderRadius: BorderRadius.circular(14)),
@@ -331,7 +332,7 @@ class _Viewall2State extends State<Viewall2>
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetailsPage(products: _products, index: index, email: widget.email)));
+                                              DetailsPageRent(product: _products, index: index, email: widget.email)));
                                 },
                               ),
                             ),
