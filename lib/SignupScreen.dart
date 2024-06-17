@@ -256,7 +256,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             IconButton(onPressed: () async {
                               ImagePicker imagePicker=ImagePicker();
                               XFile? file= await imagePicker.pickImage(source: ImageSource.camera);
-                              print('${file?.path}');
+
 
                               if (file == null) return;
 
@@ -271,6 +271,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 await referenceImageToUpload.putFile(File(file!.path));
                                 //Success: get the download URL
                                 imageUrl = await referenceImageToUpload.getDownloadURL();
+                                print('Image URL: $imageUrl');
                               } catch (error) {
                                 //Some error occurred
                               }

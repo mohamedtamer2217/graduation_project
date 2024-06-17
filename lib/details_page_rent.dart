@@ -181,7 +181,15 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                 if(rents.isNotEmpty)
                 {
                   if((rents.any((map) => map['imageUrl'] == widget.product[widget.index]['imageURL'])  && rents[widget.index]['email'] == widget.email) == false)
-                  {
+                  { QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                      .collection('users') // Replace with your collection name
+                      .where('email', isEqualTo: widget.email)
+                      .get();
+
+                    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+                     String docId = documentSnapshot.id;
+                     int currentBalance = documentSnapshot['balance'];
+                    if (currentBalance >= widget.product[widget.index]['price']) {
                     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
                     await firebaseFirestore.collection('rents').add({
                       'email': widget.email,
@@ -191,14 +199,9 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                       'isRented': true,
                     });
 
-                    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                        .collection('users') // Replace with your collection name
-                        .where('email', isEqualTo: widget.email)
-                        .get();
 
-                    DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-                    String docId = documentSnapshot.id;
-                    int currentBalance = documentSnapshot['balance'];
+
+
 
                     await FirebaseFirestore.instance
                         .collection('users')
@@ -206,13 +209,25 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                         .update({'balance': currentBalance - widget.product[widget.index]['price']});
 
                     Fluttertoast.showToast(msg: 'Successful Rent');
-                    setState(() {});
+                    setState(() {});}
+                    else{
+                    Fluttertoast.showToast(msg: 'no enough balance');
+                  }
                   }
                 }
 
 
                 else
                 {
+                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+                      .collection('users') // Replace with your collection name
+                      .where('email', isEqualTo: widget.email)
+                      .get();
+
+                  DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+                  String docId = documentSnapshot.id;
+                  int currentBalance = documentSnapshot['balance'];
+                  if (currentBalance >= widget.product[widget.index]['price']) {
                   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
                   await firebaseFirestore.collection('rents').add({
                     'email': widget.email,
@@ -222,22 +237,21 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                     'isRented': true,
                   });
 
-                  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                      .collection('users') // Replace with your collection name
-                      .where('email', isEqualTo: widget.email)
-                      .get();
 
-                  DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-                  String docId = documentSnapshot.id;
-                  int currentBalance = documentSnapshot['balance'];
 
-                  await FirebaseFirestore.instance
-                      .collection('users')
-                      .doc(docId)
-                      .update({'balance': currentBalance - widget.product[widget.index]['price']});
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(docId)
+                        .update({'balance': currentBalance - widget.product[widget.index]['price']
+                    });
+                    setState(() {});
 
-                  Fluttertoast.showToast(msg: 'Successful Rent');
-                  setState(() {});
+                    Fluttertoast.showToast(msg: 'Successful Rent');
+                  }else{
+
+                    Fluttertoast.showToast(msg: 'no enough balance');
+                  }
+
                 }
               },
             ),

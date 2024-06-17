@@ -15,14 +15,14 @@ class Wallet extends StatefulWidget
 }
 class _Wallet extends State<Wallet>
 {
-  List<dynamic> profiles = [], activities = [], activitiesRents = [];
+  List<dynamic>  activities = [], activitiesRents = [],profiles = [];
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  fetchProducts() async
+  fetchusers() async
   {
     QuerySnapshot qn = await _firestore.collection('users').get();
     setState(()
@@ -30,11 +30,11 @@ class _Wallet extends State<Wallet>
       for (int i = 0; i < qn.docs.length; i++)
       {
         profiles.add({
-          "balance": qn.docs[i]["balance"],
           "email": qn.docs[i]["email"],
           "firstName": qn.docs[i]["firstName"],
           "imageURL": qn.docs[i]["imageURL"],
           "secondName": qn.docs[i]["secondName"],
+          "balance": qn.docs[i]["balance"],
           "uid": qn.docs[i]['uid'],
         });
       }
@@ -94,7 +94,7 @@ class _Wallet extends State<Wallet>
       this.loggedInUser = UserModel.fromMap(value.data());
       setState(() {});
     });
-    fetchProducts();
+    fetchusers();
     fetchActivities();
     fetchActivitiesRent();
   }
@@ -123,70 +123,61 @@ class _Wallet extends State<Wallet>
           ),
 
 
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
+          SizedBox(height: MediaQuery.sizeOf(context).height*0.01,),
 
-
-
-          SizedBox(
-            height:150,
-
-            child: ListView.builder(
-              itemBuilder: (context,index){
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:7),
+              SizedBox(
+                height: 150,
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(horizontal:7),
                   child: Container(
                     width: 370,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color:Colors.green,
 
                     ),
 
-                      child: Column(
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 150,top: 10,left: 35),
-                                child:  Text(
-                                  'Your Wallet',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white),
-                                ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 150,top: 10,left: 35),
+                              child:  Text(
+                                'Your Wallet',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white),
                               ),
-                              Icon(Icons.more_vert,
-                                color: Colors.white,)
-                            ],
-                          ),
-                          SizedBox(height:20,),
-                          const Padding(
-                            padding: EdgeInsets.only(right: 230),
-                            child:  Text(
-                              'Balance',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
                             ),
+                            Icon(Icons.more_vert,
+                              color: Colors.white,)
+                          ],
+                        ),
+                        SizedBox(height:20,),
+                        Padding(
+                          padding: EdgeInsets.only(right: 230),
+                          child:  Text(
+                            'Balance',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
                           ),
-                          SizedBox(height:10,),
-                          Padding(
-                            padding: EdgeInsets.only(right: 190),
-                            child:  Text(
-                              '${widget.email == profiles[index]['email'] ? profiles[index]['balance'] :0}',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
-                            ),
+                        ),
+                        SizedBox(height:10,),
+                        Padding(
+                          padding: EdgeInsets.only(right: 190),
+                          child:  Text(
+                            '${profiles.firstWhere((profile) => profile['email'] == widget.email, orElse: () => null)?['balance'] ?? '0.0'}',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
 
 
 
-                );
-              },
-              itemCount: 1,
-              scrollDirection: Axis.horizontal,
-            ),
-          ),
+                ),
+              ),
 
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),

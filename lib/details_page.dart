@@ -223,41 +223,56 @@ class _DetailsPageState extends State<DetailsPage>
                       label: const Text("Invest",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
                       onPressed: () async
                       {
-                        if(snapshot.data! > 0 && snapshot.data! >= _value)
-                        {
-                          await updateTokens(imageUrl: widget.products[widget.index]['imageURL'], chosenTokens: value.chosenTokens, products: widget.products, index: widget.index);
-                          FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-                          await firebaseFirestore.collection('investments').add({
-                            'email': widget.email,
-                            'tokens': value.chosenTokens,
-                            'imageUrl': widget.products[widget.index]['imageURL'],
-                            'price': value.price,
-                            'location': widget.products[widget.index]['location'],
-                          });
-
-                        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-                            .collection('users') // Replace with your collection name
+                        QuerySnapshot querySnapshot = await FirebaseFirestore
+                            .instance
+                            .collection(
+                            'users') // Replace with your collection name
                             .where('email', isEqualTo: widget.email)
                             .get();
 
-                        DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+                        DocumentSnapshot documentSnapshot = querySnapshot.docs
+                            .first;
                         String docId = documentSnapshot.id;
 
                         int currentBalance = documentSnapshot['balance'];
 
-                        await FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(docId)
-                            .update({'balance': currentBalance - value.price});
-                          setState(() {});
+                        if(snapshot.data! > 0 && snapshot.data! >= _value && currentBalance >= value.price) {
+                          await updateTokens(imageUrl: widget.products[widget
+                              .index]['imageURL'],
+                              chosenTokens: value.chosenTokens,
+                              products: widget.products,
+                              index: widget.index);
+                          FirebaseFirestore firebaseFirestore = FirebaseFirestore
+                              .instance;
+                          await firebaseFirestore.collection('investments').add(
+                              {
+                                'email': widget.email,
+                                'tokens': value.chosenTokens,
+                                'imageUrl': widget.products[widget
+                                    .index]['imageURL'],
+                                'price': value.price,
+                                'location': widget.products[widget
+                                    .index]['location'],
+                              });
 
-                          Fluttertoast.showToast(msg: 'Successful Payment');
+
+
+
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(docId)
+                                .update(
+                                {'balance': currentBalance - value.price});
+                            setState(() {});
+
+                            Fluttertoast.showToast(msg: 'Successful Payment');
 
                         }
 
                         else
                         {
-                          Fluttertoast.showToast(msg: 'Tokens are unavailable');
+                          Fluttertoast.showToast(msg: 'No enough balance');
+
                         }
                       },
 
