@@ -165,7 +165,7 @@ class _Wallet extends State<Wallet>
                         Padding(
                           padding: EdgeInsets.only(right: 190),
                           child:  Text(
-                            '${profiles.firstWhere((profile) => profile['email'] == widget.email, orElse: () => null)?['balance'] ?? '0.0'}',
+                            '${profiles.firstWhere((profile) => profile['email'] == widget.email, orElse: () => null)?['balance'] ?? '0'}',
                             textAlign: TextAlign.start,
                             style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.white),
                           ),

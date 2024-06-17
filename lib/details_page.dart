@@ -75,7 +75,7 @@ class _DetailsPageState extends State<DetailsPage>
                       Icon(CupertinoIcons.star_fill,color: Colors.green,),
                       Icon(CupertinoIcons.star_lefthalf_fill,color: Colors.green,),
                       SizedBox(width: MediaQuery.sizeOf(context).width*0.3,),
-                      Text(value.price > 0 ? value.price.toInt().toString() : widget.products[widget.index]['price'].toString(),style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
+                      Text(value.price > 0 ? value.price.toDouble().toString() : widget.products[widget.index]['price'].toString(),style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
                     ],
 
                   ),
