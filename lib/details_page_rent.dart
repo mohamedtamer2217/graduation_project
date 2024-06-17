@@ -180,7 +180,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
               {
                 if(rents.isNotEmpty)
                 {
-                  if((rents.any((map) => map['imageUrl'] == widget.product[widget.index]['imageURL'])  && rents[widget.index]['email'] == widget.email) == false)
+                  if((rents.any((map) => map['imageUrl'] == widget.product[widget.index]['imageURL'])  || rents[widget.index]['email'] == widget.email) == false )
                   { QuerySnapshot querySnapshot = await FirebaseFirestore.instance
                       .collection('users') // Replace with your collection name
                       .where('email', isEqualTo: widget.email)
