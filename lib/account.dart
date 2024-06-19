@@ -1,4 +1,5 @@
 import 'package:akarna/LoginScreen.dart';
+import 'package:akarna/personalInfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,6 +90,25 @@ class _account_pageState extends State<account_page> {
               ),
             ),
             SizedBox(height: 50,),
+            Padding(
+              padding: const EdgeInsets.only(left: 50.0),
+              child: Row(
+                children: [
+                  Icon(Icons.info_outline,color: Colors.green,),
+                  SizedBox(width: 10,),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>personalInfo()));
+
+                    },
+                    child: Text("Personnal information",style: TextStyle(fontSize:20,fontWeight:FontWeight.bold),),
+                  )
+
+
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.only(left: 50.0),
               child: Row(

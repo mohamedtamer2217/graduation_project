@@ -15,6 +15,7 @@ class _Portofolio extends State<Portofolio>
 {
   List<dynamic> investments = [], rents = [];
 
+
   List<String> images= [
     "assets/img/1.png",
     "assets/img/2.png",
@@ -36,10 +37,16 @@ class _Portofolio extends State<Portofolio>
           "tokens": qn.docs[i]["tokens"],
         });
       }
+
+
     });
 
     return qn.docs;
   }
+
+
+
+
 
   fetchRents() async
   {
@@ -61,13 +68,17 @@ class _Portofolio extends State<Portofolio>
     return qn.docs;
   }
 
+
   @override
   void initState()
   {
     super.initState();
     fetchProducts();
     fetchRents();
+
   }
+  
+
 
   @override
   Widget build(BuildContext context)
@@ -117,8 +128,6 @@ class _Portofolio extends State<Portofolio>
         body: SingleChildScrollView(
           child: Column(
             children: [
-              const Text("My Performance",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
-
               SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
 
               Padding(
@@ -153,7 +162,7 @@ class _Portofolio extends State<Portofolio>
                             ),
                             Text('${investments[index]['price']} EGP'),
                             Text('Location: ${investments[index]['location']}'),
-                            Text('Tokens: ${investments[index]['tokens'].toString()}')
+                            Text('Tokens: ${investments[index]['tokens'].toString()}'),
                           ],
                         ),
                       ),

@@ -30,6 +30,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
+  final phoneEditingController=new TextEditingController();
+  final IDnumEditingController = new TextEditingController();
 
   CollectionReference _reference =
   FirebaseFirestore.instance.collection('users');
@@ -186,6 +188,60 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
 
+    final phoneField= TextFormField(
+      autofocus: false,
+      controller: phoneEditingController,
+      obscureText: false,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return ("phone cannot be Empty");
+        }
+        return null;
+      },
+
+
+      onSaved: (value)
+      {
+        phoneEditingController.text=value!;
+      },
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.phone),
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "phone",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          )
+      ),
+    );
+
+    final IDnumField= TextFormField(
+      autofocus: false,
+      controller: IDnumEditingController,
+      obscureText: false,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return ("IDnum cannot be Empty");
+        }
+        return null;
+      },
+
+
+      onSaved: (value)
+      {
+        IDnumEditingController.text=value!;
+      },
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.add_card),
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "National ID Number",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          )
+      ),
+    );
+
     final SignUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
@@ -234,6 +290,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     firstNameField,
                     SizedBox(height: 25,),
                     secondNameField,
+                    SizedBox(height: 25,),
+                    phoneField,
+                    SizedBox(height: 25,),
+                    IDnumField,
                     SizedBox(height: 25,),
                     emailField,
                     SizedBox(height: 25,),
@@ -350,6 +410,8 @@ class _SignupScreenState extends State<SignupScreen> {
     userModel.uid = user.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;
+    userModel.phone = phoneEditingController.text;
+    userModel.IDnum =IDnumEditingController.text;
     userModel.imageURL = imageUrl;
 
     await firebaseFirestore

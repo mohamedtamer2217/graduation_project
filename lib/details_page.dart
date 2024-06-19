@@ -236,7 +236,8 @@ class _DetailsPageState extends State<DetailsPage>
 
                         int currentBalance = documentSnapshot['balance'];
 
-                        if(snapshot.data! > 0 && snapshot.data! >= _value && currentBalance >= value.price) {
+                        if(snapshot.data! > 0 && snapshot.data! >= _value ) {
+                          if(currentBalance >= value.price){
                           await updateTokens(imageUrl: widget.products[widget
                               .index]['imageURL'],
                               chosenTokens: value.chosenTokens,
@@ -265,13 +266,16 @@ class _DetailsPageState extends State<DetailsPage>
                                 {'balance': currentBalance - value.price});
                             setState(() {});
 
-                            Fluttertoast.showToast(msg: 'Successful Payment');
+                            Fluttertoast.showToast(msg: 'Successful Payment');}
+                          else{
+                            Fluttertoast.showToast(msg: 'No enough balance');
+                          }
 
                         }
 
                         else
                         {
-                          Fluttertoast.showToast(msg: 'No enough balance');
+                          Fluttertoast.showToast(msg: 'No enough tokens');
 
                         }
                       },
