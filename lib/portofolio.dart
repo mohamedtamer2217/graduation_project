@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Portofolio extends StatefulWidget
 {
@@ -43,6 +45,7 @@ class _Portofolio extends State<Portofolio>
 
     return qn.docs;
   }
+
 
 
 
@@ -163,6 +166,85 @@ class _Portofolio extends State<Portofolio>
                             Text('${investments[index]['price']} EGP'),
                             Text('Location: ${investments[index]['location']}'),
                             Text('Tokens: ${investments[index]['tokens'].toString()}'),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0,left: 90),
+                              child: Container(
+                                width: 75,
+                                height: 19,
+
+                                decoration:BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(50),),
+
+                                child: Center(
+                                  child: CupertinoTextButton( text: 'Sell token',
+                                    style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 12,),
+                                    onTap: () async {
+                                      QuerySnapshot querySnapshot = await FirebaseFirestore
+                                          .instance
+                                          .collection(
+                                          'users') // Replace with your collection name
+                                          .where('email', isEqualTo: widget.email)
+                                          .get();
+                                      QuerySnapshot querySnapshot2 = await FirebaseFirestore
+                                          .instance
+                                          .collection(
+                                          'products') // Replace with your collection name
+                                          .where('imageURL',
+                                          isEqualTo: investments[index]['imageUrl'])
+                                          .get();
+                                      QuerySnapshot querySnapshot3 = await FirebaseFirestore
+                                          .instance
+                                          .collection(
+                                          'investments') // Replace with your collection name
+                                          .where('email',
+                                          isEqualTo: widget.email)
+                                          .get();
+
+                                      DocumentSnapshot documentSnapshot = querySnapshot
+                                          .docs
+                                          .first;
+                                      DocumentSnapshot documentSnapshot2 = querySnapshot2
+                                          .docs
+                                          .first;
+                                      DocumentSnapshot documentSnapshot3 = querySnapshot3
+                                          .docs
+                                          .first;
+                                      String docId = documentSnapshot.id;
+                                      String docId2 = documentSnapshot2.id;
+                                      String docId3 = documentSnapshot3.id;
+
+                                      int currentBalance = documentSnapshot['balance'];
+                                      int tokens = documentSnapshot2['token'];
+
+
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(docId)
+                                          .update(
+                                          {
+                                            'balance': currentBalance +
+                                                investments[index]['price']
+                                          });
+                                      setState(() {});
+                                      await FirebaseFirestore.instance
+                                          .collection('products')
+                                          .doc(docId2)
+                                          .update(
+                                          {
+                                            'token': tokens +
+                                                investments[index]['tokens']
+                                          });
+                                      setState(() {});
+
+                                      deleteDocument('investments', docId3);
+
+                                      Fluttertoast.showToast(msg: 'Successful sold');
+                                    } // Do your text stuff here.
+                                    ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -206,6 +288,43 @@ class _Portofolio extends State<Portofolio>
                             ),
                             Text('${rents[index]['price']} EGP'),
                             Text('Location: ${rents[index]['location']}'),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10.0,left: 90),
+                              child: Container(
+                                width: 75,
+                                height: 19,
+
+                                decoration:BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(50),),
+
+                                child: Center(
+                                  child: CupertinoTextButton( text: 'cancel renting',
+                                      style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 12,),
+                                      onTap: () async {
+
+                                        QuerySnapshot querySnapshot = await FirebaseFirestore
+                                            .instance
+                                            .collection(
+                                            'rents') // Replace with your collection name
+                                            .where('email',
+                                            isEqualTo: widget.email)
+                                            .get();
+
+                                        DocumentSnapshot documentSnapshot = querySnapshot
+                                            .docs
+                                            .first;
+
+                                        String docId = documentSnapshot.id;
+
+                                        deleteDocument('rents', docId);
+
+                                        Fluttertoast.showToast(msg: 'Successful canceled');
+                                      } // Do your text stuff here.
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -219,5 +338,17 @@ class _Portofolio extends State<Portofolio>
           ),
         ),
     );
+  }
+  Future<void> deleteDocument(String collectionName, String documentId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(collectionName).doc(documentId);
+
+    try {
+      await docRef.delete();
+
+      print("Document deleted successfully!");
+    } catch (error) {
+      print("Error deleting document: $error");
+    }
   }
 }

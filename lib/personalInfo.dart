@@ -21,14 +21,17 @@ class _personalInfoState extends State<personalInfo> {
   String _savedfirst = '';
   String _savedphone = '';
   String _savedsecond = '';
+  String _savedcredit = '';
   bool _showfirstnameField = false;
   bool _showsecondnameField = false;
   bool _showphoneField = false;
   bool _showIDField = false;
+  bool _showcreditField = false;
   final firstnameEditingController = new TextEditingController();
   final secondnameEditingController = new TextEditingController();
   final phoneEditingController = new TextEditingController();
   final IDEditingController = new TextEditingController();
+  final creditEditingController = new TextEditingController();
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
@@ -370,6 +373,79 @@ class _personalInfoState extends State<personalInfo> {
                                                   });
                                                   // Perform any additional actions with the saved text (optional)
                                                   print('Saved text: $_savedID');
+                                                },
+                                              ),
+                                            ]),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                        width: 250,
+                                        height: 60,
+                                        child: Text("credit card:${loggedInUser.creditcard}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
+                                    SizedBox(width: 10,),
+                                    ElevatedButton(
+                                      onPressed: () =>
+                                          setState(() =>
+                                          _showcreditField = !_showcreditField),
+                                      child: Text(_showcreditField ? 'Done' : 'Edit'),
+
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 30,
+                                      width: 200,
+                                      child: Visibility(
+
+                                        visible: _showcreditField,
+                                        child: Row(
+
+
+                                            children: [
+
+                                              Expanded(
+
+                                                child: TextField(
+                                                  controller:creditEditingController,
+                                                  decoration: InputDecoration(
+
+                                                      hintText: 'Enter text here'),
+                                                ),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.check),
+                                                onPressed: () async {
+                                                  QuerySnapshot querySnapshot = await FirebaseFirestore
+                                                      .instance
+                                                      .collection(
+                                                      'users') // Replace with your collection name
+                                                      .where('email', isEqualTo: loggedInUser.email)
+                                                      .get();
+
+                                                  DocumentSnapshot documentSnapshot = querySnapshot.docs
+                                                      .first;
+                                                  String docId = documentSnapshot.id;
+                                                  setState(() async{
+                                                    _savedcredit = creditEditingController.text;
+                                                    _showcreditField = false; // Hide the text field after saving
+                                                    creditEditingController.clear();
+                                                    await FirebaseFirestore.instance
+                                                        .collection('users')
+                                                        .doc(docId)
+                                                        .update(
+                                                        {'creditcard': _savedcredit});
+                                                    setState(() {});
+
+                                                    Fluttertoast.showToast(msg: 'Successful edited'); // Clear the text field for next use
+                                                  });
+                                                  // Perform any additional actions with the saved text (optional)
+                                                  print('Saved text: $_savedcredit');
                                                 },
                                               ),
                                             ]),

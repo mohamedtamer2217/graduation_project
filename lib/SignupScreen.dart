@@ -32,6 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final confirmPasswordEditingController = new TextEditingController();
   final phoneEditingController=new TextEditingController();
   final IDnumEditingController = new TextEditingController();
+  final creditcardEditingController = new TextEditingController();
 
   CollectionReference _reference =
   FirebaseFirestore.instance.collection('users');
@@ -242,6 +243,31 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
 
+    final creditcardField = TextFormField(
+      autofocus: false,
+      controller: creditcardEditingController,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return ("credit card cannot be Empty");
+        }
+        return null;
+      },
+
+      onSaved: (value)
+      {
+        creditcardEditingController.text=value!;
+      },
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.add_card_outlined),
+          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          hintText: "credit card number",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          )
+      ),
+    );
+
     final SignUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
@@ -294,6 +320,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     phoneField,
                     SizedBox(height: 25,),
                     IDnumField,
+                    SizedBox(height: 25,),
+                    creditcardField,
                     SizedBox(height: 25,),
                     emailField,
                     SizedBox(height: 25,),
@@ -413,6 +441,7 @@ class _SignupScreenState extends State<SignupScreen> {
     userModel.phone = phoneEditingController.text;
     userModel.IDnum =IDnumEditingController.text;
     userModel.imageURL = imageUrl;
+    userModel.creditcard=creditcardEditingController.text;
 
     await firebaseFirestore
         .collection("users")
