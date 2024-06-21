@@ -1,10 +1,13 @@
 import 'package:akarna/SignupScreen.dart';
 import 'package:akarna/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'adminpage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -98,9 +101,12 @@ class _LoginScreenState extends State<LoginScreen> {
             .of(context)
             .size
             .width,
-        onPressed: () {
+        onPressed: () async{
+          if (await logincondition(emailController.text)){
+            logInadmin(emailController.text, passwordController.text);
+          }else{
           logIn(emailController.text, passwordController.text);
-        },
+        }},
         child: Text("Login", textAlign: TextAlign.center,
           style: TextStyle(fontSize: 20,
               color: Colors.white, fontWeight: FontWeight.bold),),
@@ -179,6 +185,50 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     }
   }
+
+  void logInadmin(String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((uid) =>
+      {
+        Fluttertoast.showToast(msg: "Login Successful"),
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => adminpage(email:email))),
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: e!.message);
+      }
+
+
+      );
+    }
+  }
+  Future<bool> logincondition(String email) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore
+        .instance
+        .collection(
+        'users') // Replace with your collection name
+        .where('email', isEqualTo: email)
+        .get();
+
+
+
+    DocumentSnapshot documentSnapshot = querySnapshot
+        .docs
+        .first;
+
+    bool admin= documentSnapshot['admin'];
+
+
+   return admin;
+
+
+
+
+    }
+
+
 
 }
 
