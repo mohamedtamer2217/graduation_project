@@ -1,4 +1,5 @@
 import 'package:akarna/add_invest.dart';
+import 'package:akarna/add_rent.dart';
 import 'package:akarna/updateRent.dart';
 import 'package:akarna/updateproduct.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -159,6 +160,7 @@ class _adminpageState extends State<adminpage> {
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
               onTap: (){
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>AddRent()));
 
 
               },

@@ -31,13 +31,13 @@ class updateRent extends StatefulWidget {
 
 class _updateRentState extends State<updateRent> {
 
-  String _savedbath = '';
+  int _savedbath = 0;
   String _savedName = '';
-  String _savedbed = '';
+  int _savedbed = 0;
   int _savedprice = 0;
   String _savedlocation = '';
   String _saveddescription = '';
-  String _savedspace = '';
+  int _savedspace = 0;
   String _savedimage = '';
   bool _showNameField = false;
   bool _showbedField = false;
@@ -231,7 +231,8 @@ class _updateRentState extends State<updateRent> {
                                                 .first;
                                             String docId = documentSnapshot.id;
                                             setState(() async{
-                                              _savedbath = bathEditingController.text;
+                                              int bathCount = int.parse(bathEditingController.text);
+                                              _savedbath = bathCount;
                                               _showbathField = false; // Hide the text field after saving
                                               bathEditingController.clear();
                                               await FirebaseFirestore.instance
@@ -304,7 +305,9 @@ class _updateRentState extends State<updateRent> {
                                                 .first;
                                             String docId = documentSnapshot.id;
                                             setState(() async{
-                                              _savedbed = bedEditingController.text;
+                                              int bedCount = int.parse(bedEditingController.text);
+                                              _savedbed = bedCount;
+
                                               _showbedField = false; // Hide the text field after saving
                                               bedEditingController.clear();
                                               await FirebaseFirestore.instance
@@ -453,7 +456,7 @@ class _updateRentState extends State<updateRent> {
                                             String docId = documentSnapshot.id;
                                             setState(() async{
                                               int spaceCount = int.parse(spaceEditingController.text);
-                                              _savedprice = spaceCount;
+                                              _savedspace = spaceCount;
                                               _showspaceField = false; // Hide the text field after saving
                                               spaceEditingController.clear();
                                               await FirebaseFirestore.instance

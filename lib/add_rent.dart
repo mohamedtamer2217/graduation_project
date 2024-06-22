@@ -1,27 +1,26 @@
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'model/rent_model.dart';
 
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
-
-import 'model/product_model.dart';
 
 
 
 
-
-class AddInvest extends StatefulWidget {
-  const AddInvest({super.key});
+class AddRent extends StatefulWidget {
+  const AddRent({super.key});
 
   @override
-  State<AddInvest> createState() => _AddInvestState();
+  State<AddRent> createState() => _AddRentState();
 }
 
-class _AddInvestState extends State<AddInvest> {
+class _AddRentState extends State<AddRent> {
 
   final _formKey = GlobalKey<FormState>();
 
@@ -29,7 +28,6 @@ class _AddInvestState extends State<AddInvest> {
   final bedEditingController = new TextEditingController();
   final priceEditingController = new TextEditingController();
   final bathEditingController = new TextEditingController();
-  final tokenEditingController = new TextEditingController();
   final locationEditingController = new TextEditingController();
   final descriptionEditingController = new TextEditingController();
   final spaceEditingController = new TextEditingController();
@@ -239,34 +237,6 @@ class _AddInvestState extends State<AddInvest> {
           )
       ),
     );
-    final tokenField = TextFormField(
-      autofocus: false,
-      controller: tokenEditingController,
-      keyboardType: TextInputType.number,
-      validator: (value) {
-        RegExp regex = new RegExp(r'^.{1,}$');
-        if (value!.isEmpty) {
-          return ("token cannot be Empty");
-        }
-        if (!regex.hasMatch(value)) {
-          return ("Enter Valid token(Min.1 Character)");
-        }
-        return null;
-      },
-
-      onSaved: (value)
-      {
-        tokenEditingController.text=value!;
-      },
-      textInputAction: TextInputAction.next,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "token",
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          )
-      ),
-    );
 
     final AddButton = Material(
       elevation: 5,
@@ -286,8 +256,7 @@ class _AddInvestState extends State<AddInvest> {
     );
 
 
-
-    return Scaffold(
+    return  Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -323,8 +292,6 @@ class _AddInvestState extends State<AddInvest> {
                     SizedBox(height: 25,),
                     priceField,
                     SizedBox(height: 25,),
-                    tokenField,
-                    SizedBox(height: 25,),
                     bathField,
                     SizedBox(height: 25,),
                     bedField,
@@ -341,7 +308,7 @@ class _AddInvestState extends State<AddInvest> {
                         ),
                         child: Row(
                           children: [
-                            Text("upload invest picture",style: TextStyle(fontSize: 18),),
+                            Text("upload rent picture",style: TextStyle(fontSize: 18),),
                             SizedBox(width: 50,),
                             IconButton(onPressed: () async {
                               ImagePicker imagePicker=ImagePicker();
@@ -384,8 +351,8 @@ class _AddInvestState extends State<AddInvest> {
         ),
       ),
     );
-  }
 
+  }
 
   postDetailsToFirestore() async {
     // calling our firestore
@@ -395,22 +362,21 @@ class _AddInvestState extends State<AddInvest> {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
 
-    ProductModel productModel = ProductModel();
+    RentModel rentModel =  RentModel();
 
     // writing all the values
-    productModel.Name =NameEditingController.text;
-    productModel.space = int.parse(spaceEditingController.text);
-    productModel.token = int.parse(tokenEditingController.text);
-    productModel.bath =int.parse(bathEditingController.text);
-    productModel.imageURL = imageUrl;
-    productModel.bed=int.parse(bedEditingController.text);
-    productModel.description=descriptionEditingController.text;
-    productModel.location=locationEditingController.text;
-    productModel.price =int.parse(priceEditingController.text);
+    rentModel.Name =NameEditingController.text;
+    rentModel.space = int.parse(spaceEditingController.text);
+    rentModel.bath =int.parse(bathEditingController.text);
+    rentModel.imageURL = imageUrl;
+    rentModel.bed=int.parse(bedEditingController.text);
+    rentModel.description=descriptionEditingController.text;
+    rentModel.location=locationEditingController.text;
+    rentModel.price =int.parse(priceEditingController.text);
 
     await firebaseFirestore
-        .collection("products")
-        .add(productModel.toMap());
+        .collection("products_rent")
+        .add(rentModel.toMap());
     Fluttertoast.showToast(msg: "Added successfully :) ");
 
     Navigator.pop(context);

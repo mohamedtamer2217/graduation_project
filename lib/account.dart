@@ -85,7 +85,7 @@ class _account_pageState extends State<account_page> {
                 children: [
                   Text("Status",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),),
                   SizedBox(width: 50,),
-                  Text("Investor",style: TextStyle(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 30),),
+                  Text("${loggedInUser.status}",style: TextStyle(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 30),),
                 ],
               ),
             ),

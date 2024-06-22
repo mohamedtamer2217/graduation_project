@@ -226,7 +226,7 @@ body:SingleChildScrollView(
             text: 'View all',
             style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 20,),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>Viewall2(email: widget.email)));
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>Viewall2(email: widget.email,status: widget.status,)));
               // Do your text stuff here.
             },
           ),
@@ -266,7 +266,7 @@ body:SingleChildScrollView(
                       style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 20,),
                       onTap: ()
                       {
-                        Navigator.push(context,MaterialPageRoute(builder: (context)=> DetailsPageRent(email: widget.email, product: _products_rent, index: index)));
+                        Navigator.push(context,MaterialPageRoute(builder: (context)=> DetailsPageRent(email: widget.email, product: _products_rent, index: index,status: widget.status,)));
 
 
                         // Do your text stuff here.

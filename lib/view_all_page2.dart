@@ -14,9 +14,9 @@ import 'filter_widget.dart';
 
 class Viewall2 extends StatefulWidget
 {
-  const Viewall2({super.key, required this.email});
+  const Viewall2({super.key, required this.email,required this.status});
   final String email;
-
+  final String status;
   @override
   State<Viewall2> createState() => _Viewall2State();
 }
@@ -250,7 +250,7 @@ class _Viewall2State extends State<Viewall2>
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetailsPageRent(product: _products, index: index, email: widget.email)));
+                                              DetailsPageRent(product: _products, index: index, email: widget.email,status: widget.status,)));
                                 },
                               ),
                             ),
@@ -332,7 +332,7 @@ class _Viewall2State extends State<Viewall2>
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetailsPageRent(product: _products, index: index, email: widget.email)));
+                                              DetailsPageRent(product: _products, index: index, email: widget.email,status: widget.status,)));
                                 },
                               ),
                             ),

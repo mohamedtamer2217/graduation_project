@@ -256,6 +256,9 @@ class _Portofolio extends State<Portofolio>
 
                                       deleteDocument('investments', docId3);
 
+
+
+
                                       Fluttertoast.showToast(msg: 'Successful sold');
                                     } // Do your text stuff here.
                                     ),

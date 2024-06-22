@@ -1,14 +1,18 @@
+import 'package:akarna/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'home.dart';
+
 class DetailsPageRent extends StatefulWidget
 {
-  const DetailsPageRent({super.key, required this.email, required this.product, required this.index});
+  const DetailsPageRent({super.key, required this.email, required this.product, required this.index,required this.status});
   final List<dynamic> product;
   final String email;
   final int index;
+  final String status;
 
   @override
   State<DetailsPageRent> createState() => _DetailsPageRentState();
@@ -58,7 +62,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
             SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
             Padding(
               padding: const EdgeInsets.only(right: 330),
-              child: IconButton(  onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back),color: Colors.black,),
+              child: IconButton(  onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>MyHomePage(title: "akarna", email: widget.email, status: widget.status))), icon: Icon(Icons.arrow_back),color: Colors.black,),
             ),
 
             Image.network(
@@ -215,6 +219,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                         .update({'balance': currentBalance - widget.product[widget.index]['price']});
 
                     Fluttertoast.showToast(msg: 'Successful Rent');
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>DetailsPageRent(email: widget.email,index: widget.index,product:widget.product,status: widget.status,)));
                     setState(() {});}
                     else{
                     Fluttertoast.showToast(msg: 'no enough balance');
