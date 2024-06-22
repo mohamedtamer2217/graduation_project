@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:flutter/material.dart';
@@ -180,6 +182,10 @@ class _Portofolio extends State<Portofolio>
                                   child: CupertinoTextButton( text: 'Sell token',
                                     style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 12,),
                                     onTap: () async {
+                                      final firestore = FirebaseFirestore.instance;
+
+                                      // Use the collection method on the instance
+                                      final activitiesCollection = firestore.collection('Activities');
                                       QuerySnapshot querySnapshot = await FirebaseFirestore
                                           .instance
                                           .collection(
@@ -235,7 +241,18 @@ class _Portofolio extends State<Portofolio>
                                             'token': tokens +
                                                 investments[index]['tokens']
                                           });
+
+
                                       setState(() {});
+                                      await activitiesCollection.add(
+                                          {
+                                            'email': widget.email,
+                                            'imageUrl': investments[index]['imageUrl'],
+                                            'price': '+${investments[index]['price']} EGP',
+                                            'location': investments[index]['location'],
+                                          });
+
+
 
                                       deleteDocument('investments', docId3);
 
@@ -307,8 +324,8 @@ class _Portofolio extends State<Portofolio>
                                             .instance
                                             .collection(
                                             'rents') // Replace with your collection name
-                                            .where('email',
-                                            isEqualTo: widget.email)
+                                            .where('imageUrl',
+                                            isEqualTo: rents[index]['imageUrl'])
                                             .get();
 
                                         DocumentSnapshot documentSnapshot = querySnapshot

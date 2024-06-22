@@ -41,9 +41,10 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.email});
+  const MyHomePage({super.key, required this.title, required this.email,required this.status});
   final String email;
   final String title;
+  final String status;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -60,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
      List<Widget> _widgetOptions = <Widget>[
-       Homepage(email: widget.email),
+       Homepage(email: widget.email,status:widget.status,),
        Portofolio(email: widget.email),
        Wallet(email: widget.email),
        const account_page(),

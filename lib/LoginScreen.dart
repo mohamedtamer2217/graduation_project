@@ -169,6 +169,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void logIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
+      QuerySnapshot querySnapshot = await FirebaseFirestore
+          .instance
+          .collection(
+          'users') // Replace with your collection name
+          .where('email', isEqualTo: email)
+          .get();
+
+      DocumentSnapshot documentSnapshot = querySnapshot
+          .docs
+          .first;
+
+      String status = documentSnapshot['status'];
+
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) =>
@@ -176,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Fluttertoast.showToast(msg: "Login Successful"),
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-                builder: (context) => MyHomePage(title: "akarna", email: email))),
+                builder: (context) => MyHomePage(title: "akarna", email: email,status: status,))),
       }).catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
       }

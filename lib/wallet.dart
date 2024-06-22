@@ -15,7 +15,7 @@ class Wallet extends StatefulWidget
 }
 class _Wallet extends State<Wallet>
 {
-  List<dynamic>  activities = [], activitiesRents = [],profiles = [];
+  List<dynamic>  activities = [],profiles = [];
 
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
@@ -45,14 +45,13 @@ class _Wallet extends State<Wallet>
 
   fetchActivities() async
   {
-    QuerySnapshot qn = await _firestore.collection('investments').get();
+    QuerySnapshot qn = await _firestore.collection('Activities').get();
     setState(()
     {
       for (int i = 0; i < qn.docs.length; i++)
       {
         activities.add({
           'email': qn.docs[i]['email'],
-          'tokens': qn.docs[i]['tokens'],
           'imageUrl': qn.docs[i]['imageUrl'],
           'price': qn.docs[i]['price'],
           'location': qn.docs[i]['location'],
@@ -63,25 +62,6 @@ class _Wallet extends State<Wallet>
     return qn.docs;
   }
 
-  fetchActivitiesRent() async
-  {
-    QuerySnapshot qn = await _firestore.collection('rents').get();
-    setState(()
-    {
-      for (int i = 0; i < qn.docs.length; i++)
-      {
-        activitiesRents.add({
-          'email': qn.docs[i]['email'],
-          'isRented': qn.docs[i]['isRented'],
-          'imageUrl': qn.docs[i]['imageUrl'],
-          'price': qn.docs[i]['price'],
-          'location': qn.docs[i]['location'],
-        });
-      }
-    });
-
-    return qn.docs;
-  }
 
   @override
   void initState() {
@@ -96,7 +76,7 @@ class _Wallet extends State<Wallet>
     });
     fetchusers();
     fetchActivities();
-    fetchActivitiesRent();
+
   }
 
   @override
@@ -182,10 +162,10 @@ class _Wallet extends State<Wallet>
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
-          const Text("Investments Activities",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
+          const Text(" Activities",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
 
           SizedBox(
-            height:150.h,
+            height:350.h,
             width:370,
             child: ListView.builder(
               shrinkWrap: true,
@@ -224,9 +204,9 @@ class _Wallet extends State<Wallet>
                             const SizedBox(height:20, width:10,),
                             Row(
                               children: [
-                                Text("-\$${activities[index]['price']}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                                Text("${activities[index]['price']}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
                                 SizedBox(height:0, width:50,),
-                                Text("${activities[index]['tokens']} Tokens",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+
                               ],
                             ),
 
@@ -242,62 +222,7 @@ class _Wallet extends State<Wallet>
 
 
 
-          const Text("Rents Activities",style:TextStyle(fontWeight: FontWeight.bold,fontSize: 25),),
 
-          SizedBox(
-            height:150.h,
-            width:370,
-            child: ListView.builder(
-              itemCount: activitiesRents.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context,index)
-              {
-                return activitiesRents.isNotEmpty ? (activitiesRents[index]['email'] == widget.email ? Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    width: 380,
-                    decoration:  const BoxDecoration(
-
-                        color: Colors.grey
-
-                    ),
-                    child: Row(
-                      children: [
-
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircleAvatar(backgroundImage:AssetImage("assets/img/logo.png"),radius: 30.0,),
-                            ),
-
-
-                          ],
-                        ),
-
-                        Column(
-                          children: [
-                            Text(activitiesRents[index]['location'],style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
-                            const SizedBox(height:20, width:10,),
-                            Row(
-                              children: [
-                                Text("-\$${activitiesRents[index]['price']}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
-                                SizedBox(height:0, width:50,),
-                                Text("Rented",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
-                              ],
-                            ),
-
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ) : const SizedBox.shrink()) : const SizedBox.shrink();
-              },
-            ),
-          )
         ],
       ),
     );

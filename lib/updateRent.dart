@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,24 +12,24 @@ import 'package:image_picker/image_picker.dart';
 import 'model/product_model.dart';
 import 'model/user_model.dart';
 
-class updateproduct extends StatefulWidget {
-   updateproduct({super.key,required this.imageURL,required this.Name,required this.bath,required this.bed,required this.description,required this.location,required this.price,required this.space,required this.token});
+class updateRent extends StatefulWidget {
+  updateRent({super.key,required this.imageURL,required this.Name,required this.bath,required this.bed,required this.description,required this.location,required this.price,required this.space});
   final String imageURL;
-   final String Name;
-   final int bath;
-   final int bed;
-   final String description;
-   final String location;
-   final int price;
-   final int space;
-   final int token;
+  final String Name;
+  final int bath;
+  final int bed;
+  final String description;
+  final String location;
+  final int price;
+  final int space;
+
 
 
   @override
-  State<updateproduct> createState() => _updateproductState();
+  State<updateRent> createState() => _updateRentState();
 }
 
-class _updateproductState extends State<updateproduct> {
+class _updateRentState extends State<updateRent> {
 
   String _savedbath = '';
   String _savedName = '';
@@ -40,13 +38,11 @@ class _updateproductState extends State<updateproduct> {
   String _savedlocation = '';
   String _saveddescription = '';
   String _savedspace = '';
-  int _savedtoken = 0;
-  String _savedimage='';
+  String _savedimage = '';
   bool _showNameField = false;
   bool _showbedField = false;
   bool _showpriceField = false;
   bool _showbathField = false;
-  bool _showtokenField = false;
   bool _showspaceField = false;
   bool _showlocationField = false;
   bool _showdescriptionField = false;
@@ -54,7 +50,6 @@ class _updateproductState extends State<updateproduct> {
   final bedEditingController = new TextEditingController();
   final priceEditingController = new TextEditingController();
   final bathEditingController = new TextEditingController();
-  final tokenEditingController = new TextEditingController();
   final locationEditingController = new TextEditingController();
   final descriptionEditingController = new TextEditingController();
   final spaceEditingController = new TextEditingController();
@@ -63,7 +58,7 @@ class _updateproductState extends State<updateproduct> {
 
 
 
- final products = FirebaseFirestore.instance;
+  final products = FirebaseFirestore.instance;
 
 
   @override
@@ -154,7 +149,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('imageURL', isEqualTo: widget.imageURL)
                                                 .get();
 
@@ -166,7 +161,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showNameField = false; // Hide the text field after saving
                                               NameEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'Name': _savedName});
@@ -228,7 +223,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('imageURL', isEqualTo: widget.imageURL)
                                                 .get();
 
@@ -240,7 +235,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showbathField = false; // Hide the text field after saving
                                               bathEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'bath': _savedbath});
@@ -301,7 +296,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('bed', isEqualTo: widget.bed)
                                                 .get();
 
@@ -313,7 +308,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showbedField = false; // Hide the text field after saving
                                               bedEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'bed': _savedbed});
@@ -375,7 +370,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('imageURL', isEqualTo: widget.imageURL)
                                                 .get();
 
@@ -388,7 +383,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showpriceField = false; // Hide the text field after saving
                                               priceEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'price': _savedprice});
@@ -405,81 +400,6 @@ class _updateproductState extends State<updateproduct> {
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Container(height:80,
-                                  width: 250,
-
-                                  child: Text("token:${widget.token}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),)),
-                              SizedBox(width: 10,),
-                              ElevatedButton(
-                                onPressed: () =>
-                                    setState(() =>
-                                    _showtokenField = !_showtokenField),
-                                child: Text(_showtokenField ? 'Done' : 'Edit'),
-
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 20,
-                                width: 150,
-                                child: Visibility(
-
-                                  visible: _showtokenField,
-                                  child: Row(
-
-
-                                      children: [
-
-                                        Expanded(
-
-                                          child: TextField(
-                                            controller:tokenEditingController,
-                                            decoration: InputDecoration(
-
-                                                hintText: 'Enter text here'),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.check),
-                                          onPressed: () async {
-                                            QuerySnapshot querySnapshot = await FirebaseFirestore
-                                                .instance
-                                                .collection(
-                                                'products') // Replace with your collection name
-                                                .where('imageURL', isEqualTo: widget.imageURL)
-                                                .get();
-
-                                            DocumentSnapshot documentSnapshot = querySnapshot.docs
-                                                .first;
-                                            String docId = documentSnapshot.id;
-                                            setState(() async{
-                                              int priceCount = int.parse(tokenEditingController.text);
-                                              _savedtoken = priceCount;
-                                              _showtokenField = false; // Hide the text field after saving
-                                              tokenEditingController.clear();
-                                              await FirebaseFirestore.instance
-                                                  .collection('products')
-                                                  .doc(docId)
-                                                  .update(
-                                                  {'token': _savedtoken});
-                                              setState(() {});
-
-                                              Fluttertoast.showToast(msg: 'Successful edited'); // Clear the text field for next use
-                                            });
-                                            // Perform any additional actions with the saved text (optional)
-                                            print('Saved text: $_savedtoken');
-                                          },
-                                        ),
-                                      ]),
-                                ),
-                              ),
-                            ],
-                          ),
-
                           Row(
                             children: [
                               Container(height:80,
@@ -524,7 +444,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('imageURL', isEqualTo: widget.imageURL)
                                                 .get();
 
@@ -537,7 +457,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showspaceField = false; // Hide the text field after saving
                                               spaceEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'space': _savedspace});
@@ -598,7 +518,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('imageURL', isEqualTo: widget.imageURL)
                                                 .get();
 
@@ -610,7 +530,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showlocationField = false; // Hide the text field after saving
                                               locationEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'location': _savedlocation});
@@ -671,7 +591,7 @@ class _updateproductState extends State<updateproduct> {
                                             QuerySnapshot querySnapshot = await FirebaseFirestore
                                                 .instance
                                                 .collection(
-                                                'products') // Replace with your collection name
+                                                'products_rent') // Replace with your collection name
                                                 .where('imageURL', isEqualTo: widget.imageURL)
                                                 .get();
 
@@ -683,7 +603,7 @@ class _updateproductState extends State<updateproduct> {
                                               _showdescriptionField = false; // Hide the text field after saving
                                               descriptionEditingController.clear();
                                               await FirebaseFirestore.instance
-                                                  .collection('products')
+                                                  .collection('products_rent')
                                                   .doc(docId)
                                                   .update(
                                                   {'description': _saveddescription});
@@ -700,13 +620,6 @@ class _updateproductState extends State<updateproduct> {
                               ),
                             ],
                           ),
-
-
-
-
-
-
-
                           Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Container(
@@ -717,7 +630,7 @@ class _updateproductState extends State<updateproduct> {
                               ),
                               child: Row(
                                 children: [
-                                  Text("picture of the invest",style: TextStyle(fontSize: 18),),
+                                  Text("picture of the rent",style: TextStyle(fontSize: 18),),
                                   SizedBox(width: 50,),
                                   IconButton(onPressed: () async {
                                     ImagePicker imagePicker=ImagePicker();
@@ -728,10 +641,11 @@ class _updateproductState extends State<updateproduct> {
 
                                     Reference referenceRoot = FirebaseStorage.instance.ref();
                                     Reference referenceDirImages =
-                                    referenceRoot.child('product_Img');
+                                    referenceRoot.child('rents_Img');
                                     Reference referenceImageToUpload =
                                     referenceDirImages.child(widget.Name);
 
+                                    try {
                                       //Store the file
                                       await referenceImageToUpload.putFile(File(file!.path));
                                       //Success: get the download URL
@@ -740,7 +654,7 @@ class _updateproductState extends State<updateproduct> {
                                       QuerySnapshot querySnapshot = await FirebaseFirestore
                                           .instance
                                           .collection(
-                                          'products') // Replace with your collection name
+                                          'products_rent') // Replace with your collection name
                                           .where('imageURL', isEqualTo: widget.imageURL)
                                           .get();
 
@@ -749,7 +663,7 @@ class _updateproductState extends State<updateproduct> {
                                       String docId = documentSnapshot.id;
                                       setState(() async{
                                         await FirebaseFirestore.instance
-                                            .collection('products')
+                                            .collection('products_rent')
                                             .doc(docId)
                                             .update(
                                             {'imageURL': _savedimage});
@@ -758,7 +672,9 @@ class _updateproductState extends State<updateproduct> {
                                         Fluttertoast.showToast(msg: 'Successful edited'); // Clear the text field for next use
                                       });
 
-
+                                    } catch (error) {
+                                      //Some error occurred
+                                    }
 
                                   }
                                       ,icon:Icon(Icons.camera_alt,color: Colors.green,))

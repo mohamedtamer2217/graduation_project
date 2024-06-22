@@ -16,8 +16,9 @@ import 'details_page_rent.dart';
 
 
 class Homepage extends StatefulWidget {
-const Homepage({super.key, required this.email});
+const Homepage({super.key, required this.email,required this.status});
 final String email;
+final String status;
 
 @override
 State<Homepage> createState() => _Homepage();
@@ -148,7 +149,7 @@ body:SingleChildScrollView(
             text: 'View all',
             style: const TextStyle(fontWeight:FontWeight.bold,fontSize: 20,),
             onTap: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>Viewall(email: widget.email)));
+              Navigator.push(context,MaterialPageRoute(builder: (context)=>Viewall(email: widget.email,status: widget.status,)));
 
               // Do your text stuff here.
             },
@@ -194,7 +195,7 @@ body:SingleChildScrollView(
 
                         _products[index]['token'] == 0 ? Fluttertoast.showToast(msg: 'All tokens are sold') : Navigator.push(context,MaterialPageRoute(builder: (context)
                         {
-                          return DetailsPage(products: _products, index: index, email: widget.email);
+                          return DetailsPage(products: _products, index: index, email: widget.email,status: widget.status,);
                         }));
 
 

@@ -442,6 +442,8 @@ class _SignupScreenState extends State<SignupScreen> {
     userModel.IDnum =IDnumEditingController.text;
     userModel.imageURL = imageUrl;
     userModel.creditcard=creditcardEditingController.text;
+    userModel.status='Renter';
+    userModel.admin=false;
 
     await firebaseFirestore
         .collection("users")
@@ -451,7 +453,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     Navigator.pushAndRemoveUntil(
         (context),
-        MaterialPageRoute(builder: (context) => MyHomePage(title: "akarna", email: user.email!)),
+        MaterialPageRoute(builder: (context) => MyHomePage(title: "akarna", email: user.email!,status: 'Renter',)),
             (route) => false);
   }
 

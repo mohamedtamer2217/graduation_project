@@ -198,9 +198,15 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                       'location': widget.product[widget.index]['location'],
                       'isRented': true,
                     });
-
-
-
+                    await firebaseFirestore.collection('Activities').add(
+                        {
+                          'email': widget.email,
+                          'imageUrl': widget.product[widget
+                              .index]['imageURL'],
+                          'price': '-${widget.product[widget.index]['price']} EGP',
+                          'location': widget.product[widget
+                              .index]['location'],
+                        });
 
 
                     await FirebaseFirestore.instance

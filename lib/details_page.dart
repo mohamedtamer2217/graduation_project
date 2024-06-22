@@ -1,4 +1,5 @@
 import 'package:akarna/model/token_notifier.dart';
+import 'package:akarna/request_to_be_investor.dart';
 import 'package:akarna/stream_token.dart';
 import 'package:akarna/update_tokens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,9 +10,10 @@ import 'package:provider/provider.dart';
 
 class DetailsPage extends StatefulWidget
 {
-  const DetailsPage({super.key, required this.products, required this.index, required this.email,});
+  const DetailsPage({super.key, required this.products, required this.index, required this.email,required this.status,});
   final List<dynamic> products;
   final String email;
+  final String status;
   final int index;
 
   @override
@@ -207,7 +209,8 @@ class _DetailsPageState extends State<DetailsPage>
                   padding: const EdgeInsets.only(top: 10.0,left: 22),
                   child: Row(
                     children: [
-                      Text( widget.products[widget.index]['description'])
+                      Text( widget.products[widget.index]['description']),
+                      Text( widget.status)
                     ],
                   ),
                 ),
@@ -218,7 +221,7 @@ class _DetailsPageState extends State<DetailsPage>
                   stream: _tokenStream,
                   builder: (context, snapshot)
                   {
-                    return FloatingActionButton.extended(
+                    return widget.status == 'Investor' ?FloatingActionButton.extended(
                       backgroundColor: Colors.green,
                       label: const Text("Invest",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
                       onPressed: () async
@@ -255,11 +258,17 @@ class _DetailsPageState extends State<DetailsPage>
                                 'location': widget.products[widget
                                     .index]['location'],
                               });
+                          await firebaseFirestore.collection('Activities').add(
+                              {
+                                'email': widget.email,
+                                'imageUrl': widget.products[widget
+                                    .index]['imageURL'],
+                                'price': '-${value.price} EGP',
+                                'location': widget.products[widget
+                                    .index]['location'],
+                              });
 
-
-
-
-                            await FirebaseFirestore.instance
+                          await FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(docId)
                                 .update(
@@ -280,7 +289,14 @@ class _DetailsPageState extends State<DetailsPage>
                         }
                       },
 
-                    );
+                    ):FloatingActionButton.extended(
+                  backgroundColor: Colors.green,
+                  label: const Text("Invest",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white,fontSize: 20),),
+                  onPressed: () async
+                  {
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>RequestInvest(email: widget.email)));
+
+                  } );
                   }
                 ),
 

@@ -15,8 +15,9 @@ import 'package:flutter/widgets.dart';
 import 'filter_widget.dart';
 
 class Viewall extends StatefulWidget {
-  const Viewall({super.key, required this.email});
+  const Viewall({super.key, required this.email,required this.status});
   final String email;
+  final String status;
 
   @override
   State<Viewall> createState() => _ViewallState();
@@ -196,7 +197,7 @@ class _ViewallState extends State<Viewall> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DetailsPage(products: _products, index: index, email: widget.email)));
+                                              DetailsPage(products: _products, index: index, email: widget.email,status: widget.status,)));
                                 },
                               ),
                             ),
@@ -266,7 +267,7 @@ class _ViewallState extends State<Viewall> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  DetailsPage(products: _products, index: index, email: widget.email)));
+                                                  DetailsPage(products: _products, index: index, email: widget.email,status:widget.status,)));
                                     }
 
                                   else
