@@ -34,8 +34,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final IDnumEditingController = new TextEditingController();
   final creditcardEditingController = new TextEditingController();
 
-  CollectionReference _reference =
-  FirebaseFirestore.instance.collection('users');
+  CollectionReference _reference = FirebaseFirestore.instance.collection('users');
 
   String imageUrl = '';
 

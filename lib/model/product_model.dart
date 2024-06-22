@@ -2,7 +2,7 @@ class ProductModel {
   String? Name;
   int? bath;
   int? bed;
-  int? description;
+  String? description;
   String? location;
   int? price;
   String? imageURL;
@@ -22,6 +22,7 @@ class ProductModel {
       imageURL: map['imageURL'],
       space: map['space'],
       token: map['token'],
+      price: map['price'],
     );
   }
 
@@ -36,6 +37,7 @@ class ProductModel {
       'imageURL':imageURL,
       'space':space,
       'token':token,
+      'price':price,
     };
   }
 }

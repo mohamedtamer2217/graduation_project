@@ -1,3 +1,4 @@
+import 'package:akarna/add_invest.dart';
 import 'package:akarna/updateRent.dart';
 import 'package:akarna/updateproduct.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -129,7 +130,41 @@ class _adminpageState extends State<adminpage> {
 
         backgroundColor: Colors.green,
         actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => adminpage(email: widget.email)));
+                
 
+              },
+              child: Icon(Icons.refresh)
+            ),
+          ),
+
+
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: GestureDetector(
+              onTap: (){
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>AddInvest()));
+
+
+              },
+              child: Text("add invest",style: TextStyle(color:Colors.white,fontSize:15,fontWeight:FontWeight.bold),),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: GestureDetector(
+              onTap: (){
+
+
+              },
+              child: Text("add rent",style: TextStyle(color:Colors.white,fontSize:15,fontWeight:FontWeight.bold),),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: GestureDetector(
@@ -139,7 +174,7 @@ class _adminpageState extends State<adminpage> {
               },
               child: Text("Logout",style: TextStyle(color:Colors.white,fontSize:15,fontWeight:FontWeight.bold),),
             ),
-          )
+          ),
         ]
 
       ),
