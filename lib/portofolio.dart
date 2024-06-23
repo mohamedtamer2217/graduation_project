@@ -1,5 +1,6 @@
 
 
+import 'package:akarna/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class Portofolio extends StatefulWidget
 {
-  const Portofolio({super.key, required this.email});
+  const Portofolio({super.key, required this.email,required this.status});
   final String email;
+  final String status;
 
   @override
   State<Portofolio> createState() => _Portofolio();
@@ -256,6 +258,8 @@ class _Portofolio extends State<Portofolio>
 
                                       deleteDocument('investments', docId3);
 
+                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>MyHomePage(title:'akarna',email: widget.email,status: widget.status,)));
+
 
 
 
@@ -338,6 +342,7 @@ class _Portofolio extends State<Portofolio>
                                         String docId = documentSnapshot.id;
 
                                         deleteDocument('rents', docId);
+                                        Navigator.push(context,MaterialPageRoute(builder: (context)=>MyHomePage(title:'akarna',email: widget.email,status: widget.status,)));
 
                                         Fluttertoast.showToast(msg: 'Successful canceled');
                                       } // Do your text stuff here.

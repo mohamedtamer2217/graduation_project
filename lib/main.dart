@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
      List<Widget> _widgetOptions = <Widget>[
        Homepage(email: widget.email,status:widget.status,),
-       Portofolio(email: widget.email),
+       Portofolio(email: widget.email,status: widget.status,),
        Wallet(email: widget.email),
        const account_page(),
     ];
