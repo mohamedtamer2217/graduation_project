@@ -1,6 +1,6 @@
 
 
-import 'package:akarna/main.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cupertino_text_button/cupertino_text_button.dart';
 import 'package:flutter/material.dart';
@@ -205,8 +205,9 @@ class _Portofolio extends State<Portofolio>
                                           .instance
                                           .collection(
                                           'investments') // Replace with your collection name
-                                          .where('email',
-                                          isEqualTo: widget.email)
+                                          .where('imageUrl',
+                                          isEqualTo: investments[index]['imageUrl'] )
+                                          .where('tokens', isEqualTo: investments[index]['tokens'])
                                           .get();
 
                                       DocumentSnapshot documentSnapshot = querySnapshot
@@ -258,7 +259,7 @@ class _Portofolio extends State<Portofolio>
 
                                       deleteDocument('investments', docId3);
 
-                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>MyHomePage(title:'akarna',email: widget.email,status: widget.status,)));
+
 
 
 
@@ -342,7 +343,7 @@ class _Portofolio extends State<Portofolio>
                                         String docId = documentSnapshot.id;
 
                                         deleteDocument('rents', docId);
-                                        Navigator.push(context,MaterialPageRoute(builder: (context)=>MyHomePage(title:'akarna',email: widget.email,status: widget.status,)));
+
 
                                         Fluttertoast.showToast(msg: 'Successful canceled');
                                       } // Do your text stuff here.

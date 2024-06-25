@@ -92,7 +92,7 @@ class _DetailsPageState extends State<DetailsPage>
                           Text(widget.products[widget.index]['Name'],style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                         ],
                       ),
-                      SizedBox(width: MediaQuery.sizeOf(context).width*0.25,),
+                      SizedBox(width: MediaQuery.sizeOf(context).width*0.20,),
                       const Icon(CupertinoIcons.location_solid,color: Colors.green,),
                       Column(
                         children: [
@@ -209,8 +209,10 @@ class _DetailsPageState extends State<DetailsPage>
                   padding: const EdgeInsets.only(top: 10.0,left: 22),
                   child: Row(
                     children: [
-                      Text( widget.products[widget.index]['description']),
-                      Text( widget.status)
+                      Container(
+                          width:250,
+                          height:100 ,
+                          child: Text( widget.products[widget.index]['description'])),
                     ],
                   ),
                 ),

@@ -62,7 +62,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
             SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
             Padding(
               padding: const EdgeInsets.only(right: 330),
-              child: IconButton(  onPressed: () => Navigator.push(context,MaterialPageRoute(builder: (context)=>MyHomePage(title: "akarna", email: widget.email, status: widget.status))), icon: Icon(Icons.arrow_back),color: Colors.black,),
+              child: IconButton(  onPressed: () => Navigator.pop(context), icon: Icon(Icons.arrow_back),color: Colors.black,),
             ),
 
             Image.network(
@@ -102,7 +102,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
                       Text(widget.product[widget.index]['Name'],style:TextStyle(fontSize: 15,fontWeight: FontWeight.bold),),
                     ],
                   ),
-                  SizedBox(width: MediaQuery.sizeOf(context).width*0.25,),
+                  SizedBox(width: MediaQuery.sizeOf(context).width*0.20,),
                   const Icon(CupertinoIcons.location_solid,color: Colors.green,),
                   Column(
                     children: [
@@ -163,7 +163,7 @@ class _DetailsPageRentState extends State<DetailsPageRent>
               padding: const EdgeInsets.only(top: 10.0,left: 22),
               child: Row(
                 children: [
-                  Text("Description" ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
+                 Text("Description" ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),)
                 ],
               ),
             ),
@@ -172,7 +172,10 @@ class _DetailsPageRentState extends State<DetailsPageRent>
               padding: const EdgeInsets.only(top: 10.0,left: 22),
               child: Row(
                 children: [
-                  Text( widget.product[widget.index]['description'])
+                  Container(
+                      width:250,
+                      height:100 ,
+                      child: Text( widget.product[widget.index]['description']))
                 ],
               ),
             ),
